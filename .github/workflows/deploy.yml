@@ -1,0 +1,46 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      # GitHub Pages 项目页需要 /<repo>/ 前缀；部署到自定义域名/平台时改为 '/'
+      VITEPRESS_BASE: /${{ github.event.repository.name }}/
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      # PDF 字体依赖：中文（Noto Sans/Serif CJK）与西文（Liberation）
+      - run: sudo apt-get update && sudo apt-get install -y fonts-noto-cjk fonts-liberation
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: typst
+      - run: pnpm install --frozen-lockfile
+      # 先预生成 PDF 到 content/public/pdfs/，再构建站点（public 随构建复制进 dist）
+      - run: pnpm prebuild:pdf
+      - run: pnpm build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .vitepress/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

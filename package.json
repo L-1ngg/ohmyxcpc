@@ -1,0 +1,27 @@
+{
+  "name": "ohmyxcpc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview",
+    "export:pdf": "node scripts/export-pdf.mjs",
+    "prebuild:pdf": "node scripts/prebuild-pdfs.mjs",
+    "release": "pnpm prebuild:pdf && pnpm build",
+    "smoke": "node scripts/smoke-export.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.22.0",
+  "devDependencies": {
+    "markdown-it": "^15.0.0",
+    "markdown-it-container": "^4.0.0",
+    "markdown-it-mathjax3": "^5.2.0",
+    "playwright-core": "^1.62.1",
+    "vitepress": "^1.6.4"
+  },
+  "type": "module"
+}
