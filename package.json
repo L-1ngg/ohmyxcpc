@@ -1,8 +1,17 @@
 {
   "name": "ohmyxcpc",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "XCPC 算法模板库 —— 丢进文件夹，自动成站",
+  "homepage": "https://l-1ngg.github.io/ohmyxcpc/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/L-1ngg/ohmyxcpc.git"
+  },
+  "bugs": "https://github.com/L-1ngg/ohmyxcpc/issues",
+  "license": "ISC",
+  "author": "L-1ngg",
+  "packageManager": "pnpm@10.22.0",
+  "type": "module",
   "scripts": {
     "dev": "vitepress dev",
     "build": "vitepress build",
@@ -12,16 +21,11 @@
     "release": "pnpm prebuild:pdf && pnpm build",
     "smoke": "node scripts/smoke-export.mjs"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.22.0",
   "devDependencies": {
     "markdown-it": "^15.0.0",
     "markdown-it-container": "^4.0.0",
     "markdown-it-mathjax3": "^4.3.2",
     "playwright-core": "^1.62.1",
     "vitepress": "^1.6.4"
-  },
-  "type": "module"
+  }
 }
