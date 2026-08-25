@@ -1,15 +1,19 @@
 <script setup lang="ts">
 // 章节 PDF 卡片：固定在右侧大纲栏底部（aside-bottom 插槽），提供本章下载
 import { ref, computed, onMounted } from 'vue'
-import { useRoute, withBase } from 'vitepress'
+import { useRoute, useData, withBase } from 'vitepress'
 import { loadManifest, pdfUrl, fmtBytes, type PdfManifest } from './manifest'
 
 const route = useRoute()
+const { site } = useData()
 const manifest = ref<PdfManifest | null>(null)
 onMounted(async () => { manifest.value = await loadManifest() })
 
 const chapter = computed(() => {
-  const dir = route.path.replace(/^\//, '').replace(/\.html$/, '').split('/')[0]
+  // route.path 带部署 base（如 /ohmyxcpc/graph/dinic.html），需先剥离
+  const b = site.value.base
+  const p = b !== '/' && route.path.startsWith(b) ? route.path.slice(b.length - 1) : route.path
+  const dir = p.replace(/^\//, '').replace(/\.html$/, '').split('/')[0]
   return manifest.value?.targets.find(t => t.type === 'chapter' && t.id === dir)
 })
 </script>

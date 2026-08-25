@@ -10,8 +10,11 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const distDir = join(root, '.vitepress/dist')
 
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.ttf': 'font/ttf', '.json': 'application/json', '.pdf': 'application/pdf', '.webp': 'image/webp' }
+// 站点可能以子路径构建（CI 注入 VITEPRESS_BASE=/repo/）：请求路径剥离该前缀后再查文件
+const base = process.env.VITEPRESS_BASE || '/'
+const stripBase = p => (base !== '/' && p.startsWith(base)) ? '/' + p.slice(base.length) : p
 const server = createServer((req, res) => {
-  const p = decodeURIComponent(new URL(req.url, 'http://x').pathname)
+  const p = stripBase(decodeURIComponent(new URL(req.url, 'http://x').pathname))
   for (const cand of [p, p + '.html', join(p, 'index.html')]) {
     const file = join(distDir, cand)
     if (existsSync(file) && !file.endsWith('/')) {
@@ -23,6 +26,8 @@ const server = createServer((req, res) => {
 })
 await new Promise(r => server.listen(0, r))
 const origin = `http://127.0.0.1:${server.address().port}`
+// 页面地址需带 base 前缀（资源引用、manifest fetch 均按 base 生成）
+const siteRoot = origin + (base === '/' ? '' : base.replace(/\/$/, ''))
 
 const shellDir = join(process.env.HOME, '.cache/ms-playwright')
 function findChromium() {
@@ -51,12 +56,12 @@ const stdTpl = manifest.templates.find(t => t.id === 'standard')?.id ?? manifest
 const dblTpl = manifest.templates.find(t => t.id === 'double')?.id ?? manifest.templates[1].id
 
 // 1. 入口：导航链接 + 首页 hero
-await page.goto(origin + '/', { waitUntil: 'networkidle' })
+await page.goto(siteRoot + '/', { waitUntil: 'networkidle' })
 check('导航栏存在「下载中心」', await page.locator('nav a:has-text("下载中心")').count() >= 1)
 check('首页 hero 存在「下载整站 PDF」', await page.locator('a:has-text("下载整站 PDF")').count() >= 1)
 
 // 2. 下载中心页：默认整站 + standard，且无站点侧栏/大纲
-await page.goto(origin + '/export', { waitUntil: 'networkidle' })
+await page.goto(siteRoot + '/export', { waitUntil: 'networkidle' })
 await page.waitForSelector('.ep-frame', { timeout: 8000 }).catch(() => {})
 check('下载中心无站点侧栏与大纲', await page.locator('.VPSidebar, .VPDocAside').count() === 0)
 check('下载中心渲染目标树', (await page.locator('.ep-item').count()) >= manifest.targets.length - 1)
@@ -64,7 +69,7 @@ let src = await page.locator('.ep-frame').getAttribute('src').catch(() => '')
 check('默认预览整站单栏版', !!src?.includes(`all.${stdTpl}.pdf`))
 
 // 3. URL 参数直达：?target=<章节>&tpl=double
-await page.goto(`${origin}/export?target=${sampleChapter.id}&tpl=${dblTpl}`, { waitUntil: 'networkidle' })
+await page.goto(`${siteRoot}/export?target=${sampleChapter.id}&tpl=${dblTpl}`, { waitUntil: 'networkidle' })
 await page.waitForSelector('.ep-frame', { timeout: 15000 }).catch(() => {})
 await page.waitForSelector('.ep-item.on', { timeout: 15000 }).catch(() => {})
 src = await page.locator('.ep-frame').getAttribute('src').catch(() => '')
@@ -74,7 +79,7 @@ mkdirSync(join(root, 'pdf'), { recursive: true })
 await page.screenshot({ path: join(root, 'pdf/export-center.png'), fullPage: false })
 
 // 4. 章节内固定卡片
-await page.goto(`${origin}/${samplePage.id}`, { waitUntil: 'networkidle' })
+await page.goto(`${siteRoot}/${samplePage.id}`, { waitUntil: 'networkidle' })
 await page.waitForSelector('.chapter-pdf', { timeout: 15000 }).catch(() => {})
 const card = page.locator('.chapter-pdf')
 check('条目页存在章节卡片', await card.count() === 1)
@@ -91,7 +96,7 @@ await page.screenshot({ path: join(root, 'pdf/chapter-card.png') })
 
 // 5. 移动端：目录默认折叠，点击展开，选择后自动收起
 await page.setViewportSize({ width: 390, height: 844 })
-await page.goto(origin + '/export', { waitUntil: 'networkidle' })
+await page.goto(siteRoot + '/export', { waitUntil: 'networkidle' })
 await page.waitForSelector('.ep-frame', { timeout: 15000 }).catch(() => {})
 check('移动端目录默认折叠', !(await page.locator('.ep-catalog').isVisible()))
 await page.locator('.ep-catalog-toggle').click()
