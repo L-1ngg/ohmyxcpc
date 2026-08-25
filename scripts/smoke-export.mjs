@@ -25,9 +25,18 @@ await new Promise(r => server.listen(0, r))
 const origin = `http://127.0.0.1:${server.address().port}`
 
 const shellDir = join(process.env.HOME, '.cache/ms-playwright')
-const exe = process.env.CHROMIUM_PATH ?? readdirSync(shellDir)
-  .filter(d => d.startsWith('chromium_headless_shell'))
-  .map(d => join(shellDir, d, 'chrome-linux/headless_shell'))[0]
+function findChromium() {
+  if (process.env.CHROMIUM_PATH) return process.env.CHROMIUM_PATH
+  const dirs = readdirSync(shellDir).filter(d => d.startsWith('chromium_headless_shell'))
+  for (const d of dirs) {
+    // 新旧版本目录结构不同：chrome-linux/headless_shell vs chrome-headless-shell-linux64/chrome-headless-shell
+    for (const sub of ['chrome-linux/headless_shell', 'chrome-headless-shell-linux64/chrome-headless-shell']) {
+      const p = join(shellDir, d, sub)
+      if (existsSync(p)) return p
+    }
+  }
+}
+const exe = findChromium()
 
 const browser = await chromium.launch({ executablePath: exe })
 const page = await browser.newPage()
