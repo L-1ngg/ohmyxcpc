@@ -1,9 +1,11 @@
 // PDF 导出核心：内容组装 + typst 编译（CLI 与预生成管线共用）
 import { readFileSync, mkdirSync, writeFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
-import { execFileSync } from 'node:child_process'
+import { execFile } from 'node:child_process'
+import { promisify } from 'node:util'
 import { mdToTypst, preprocessMd } from './md2typst.mjs'
 
+const execFileAsync = promisify(execFile)
 export const TYPST = process.env.TYPST_PATH ?? 'typst'
 
 // groups: [{ title, entries: [{ path（content 相对路径）, demote }] }]
@@ -23,7 +25,7 @@ export function composeBody(groups, contentDir) {
 // 编译单个 (目标 × 模板)
 //   cover:   整站导出时启用封面与目录页（模板根据 cover/date 输入渲染）
 //   preview: 额外产出首页 PNG 预览（CLI 用）
-export function exportOne({ root, buildDir, outDir, name, headerTitle, body, templateId, templateDir, cover = false, preview = false }) {
+export async function exportOne({ root, buildDir, outDir, name, headerTitle, body, templateId, templateDir, cover = false, preview = false }) {
   const src = readFileSync(join(templateDir, templateId, 'template.typ'), 'utf8') + '\n' + body
   mkdirSync(buildDir, { recursive: true })
   mkdirSync(outDir, { recursive: true })
@@ -36,9 +38,9 @@ export function exportOne({ root, buildDir, outDir, name, headerTitle, body, tem
     '--input', `date=${new Date().toISOString().slice(0, 10)}`,
     ...(cover ? ['--input', 'cover=1'] : [])
   ]
-  execFileSync(TYPST, [...common, typFile, pdf], { stdio: 'inherit' })
+  await execFileAsync(TYPST, [...common, typFile, pdf])
   if (preview) {
-    execFileSync(TYPST, [...common, '--pages', '1', typFile, join(outDir, `${name}.${templateId}-preview.png`)], { stdio: 'inherit' })
+    await execFileAsync(TYPST, [...common, '--pages', '1', typFile, join(outDir, `${name}.${templateId}-preview.png`)])
   }
   return { pdf, bytes: statSync(pdf).size }
 }

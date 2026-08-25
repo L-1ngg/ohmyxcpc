@@ -51,6 +51,6 @@ rmSync(buildDir, { recursive: true, force: true })
 
 const body = composeBody(groups, contentDir)
 for (const tpl of templates) {
-  exportOne({ root, buildDir, outDir, name, headerTitle, body, templateId: tpl, templateDir, cover, preview: true })
+  await exportOne({ root, buildDir, outDir, name, headerTitle, body, templateId: tpl, templateDir, cover, preview: true })
   console.log(`完成: pdf/${name}.${tpl}.pdf`)
 }
