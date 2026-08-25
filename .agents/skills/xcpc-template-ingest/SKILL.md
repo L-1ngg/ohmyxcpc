@@ -16,6 +16,7 @@ description: 将 content/_inbox/ 中的原始 Markdown / 代码文件整理并�
   - `order`（可选，数值）：升序排列，缺省排最后；章节与条目均适用
 - **代码与文档同源**：完整代码文件放 `content/snippets/`，条目内用 `<<< @/snippets/<文件名>` 引用；短代码段可直接用围栏代码块，**必须标注语言**（` ```cpp `）
 - 公式用 LaTeX：行内 `$...$`，块级 `$$...$$`
+- VitePress 语法细节（frontmatter 规则、代码块高亮/导入、提示块、图片与静态资源路径）见 [references/vitepress.md](references/vitepress.md)
 
 ## 收录流程
 
