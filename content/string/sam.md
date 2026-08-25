@@ -20,7 +20,12 @@ order: 11
 5. **寻找最小循环移位**：
    - 这是一个经典应用，可以利用后缀自动机在线性时间内找到一个字符串的最小字典序循环移位。
 
-如果把 AC 自动机看作是“**在一篇文章里找特定的几个关键词**”的专家，那么后缀自动机就是“**给你一篇文章，然后问关于这篇文章任何片段（子串）的任何刁钻问题**”的全能专家。它的应用深度和广度远超多模式匹配。
+本条目提供两个版本：
+
+- **数组版**：转移用定长数组（小写字母），查询转移 $\mathcal O(1)$，速度最快，适合字符集固定为小写字母的场合；clone 节点的 `siz` 已正确置 0。`endpos`、`size` 等附加信息需按需扩展。
+- **map 版**：转移用 `std::map`，支持任意字符集；构建过程中同步记录每个状态的 `endpos` 与 `size`（出现次数），开箱即用；代价是转移多一个 $\log |\Sigma|$。
+
+## 数组版
 
 ```cpp
 // 有向无环图
@@ -31,12 +36,14 @@ struct SuffixAutomaton {
         int siz;
     } t[N << 1];
     int cntNodes;
-    SuffixAutomaton() {
+    SuffixAutomaton()
+    {
         cntNodes = 1;
-        fill(t[0].nxt, t[0].nxt + 26, 1);
+        std::fill(t[0].nxt, t[0].nxt + 26, 1);
         t[0].len = -1;
     }
-    int extend(int p, int c) {
+    int extend(int p, int c)
+    {
         if (t[p].nxt[c]) {
             int q = t[p].nxt[c];
             if (t[q].len == t[p].len + 1) {
@@ -46,7 +53,7 @@ struct SuffixAutomaton {
             t[r].siz = 0;
             t[r].len = t[p].len + 1;
             t[r].link = t[q].link;
-            copy(t[q].nxt, t[q].nxt + 26, t[r].nxt);
+            std::copy(t[q].nxt, t[q].nxt + 26, t[r].nxt);
             t[q].link = r;
             while (t[p].nxt[c] == q) {
                 t[p].nxt[c] = r;
@@ -70,12 +77,15 @@ struct SuffixAutomaton {
 endpos, size 按需
 link 构造后缀树
 
+## map 版
+
 ```cpp
 struct SAM {
     struct node {
         int len, link, endpos, size;
         std::map<char, int> next;
-        node() {
+        node()
+        {
             len = link = endpos = -1;
             size = 0;
             next = std::map<char, int>();
@@ -85,7 +95,8 @@ struct SAM {
     int last;
     int n;
 
-    SAM(std::string& s) {
+    SAM(std::string& s)
+    {
         n = s.length();
         nodes.reserve(2 * n);
         nodes.assign(1, node());
@@ -97,7 +108,8 @@ struct SAM {
         }
     }
 
-    void extend(char c, int pos) {
+    void extend(char c, int pos)
+    {
         int cur = nodes.size();
         nodes.emplace_back();
         nodes[cur].len = nodes[last].len + 1;
@@ -132,7 +144,8 @@ struct SAM {
         last = cur;
     }
 
-    void debug() {
+    void debug()
+    {
         for (auto x : nodes) {
             std::cerr << x.len << ' ';
             std::cerr << x.link << ' ';

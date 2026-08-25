@@ -7,16 +7,25 @@ order: 9
 
 定义 $|s_i|$ 是模板串的长度，$|S|$ 是文本串的长度，$|\Sigma|$ 是字符集的大小（常数，一般为 $26$），时间复杂度为 $\mathcal O(\sum|s_i|+|S|)$ 。
 
+本条目提供两个版本：
+
+- **数组版**：静态数组，速度最快；`query` 沿 fail 链累加计数并将访问过的状态置 -1 去重，直接返回文本串命中各模式串的**总次数**（注意该过程会修改自动机状态，同一自动机只能用一次查询）。
+- **动态开点版**：`vector` 按需分配；`work()` 先让文本串在自动机上跑一遍记录各状态命中次数，再在 fail 树上 DFS 汇总，返回**每个状态的计数数组**——配合 `add()` 记录的模式串结尾节点，可得到每个模式串各自的出现次数；附 `next`/`link`/`len`/`size` 访问接口。
+
+## 数组版
+
 ```cpp
 // Trie+Kmp，多模式串匹配
 struct ACAutomaton {
     static constexpr int N = 1e6 + 10;
     int ch[N][26], fail[N], cntNodes;
     int cnt[N];
-    ACAutomaton() {
+    ACAutomaton()
+    {
         cntNodes = 1;
     }
-    void insert(string s) {
+    void insert(std::string s)
+    {
         int u = 1;
         for (auto c : s) {
             int &v = ch[u][c - 'a'];
@@ -25,9 +34,10 @@ struct ACAutomaton {
         }
         cnt[u]++;
     }
-    void build() {
-        fill(ch[0], ch[0] + 26, 1);
-        queue<int> q;
+    void build()
+    {
+        std::fill(ch[0], ch[0] + 26, 1);
+        std::queue<int> q;
         q.push(1);
         while (!q.empty()) {
             int u = q.front();
@@ -43,8 +53,9 @@ struct ACAutomaton {
             }
         }
     }
-    LL query(string t) {
-        LL ans = 0;
+    i64 query(std::string t)
+    {
+        i64 ans = 0;
         int u = 1;
         for (auto c : t) {
             u = ch[u][c - 'a'];
@@ -58,6 +69,8 @@ struct ACAutomaton {
 };
 ```
 
+## 动态开点版
+
 ```cpp
 struct AhoCorasick {
     static constexpr int ALPHABET = 26;
@@ -70,22 +83,26 @@ struct AhoCorasick {
 
     std::vector<Node> t;
 
-    AhoCorasick() {
+    AhoCorasick()
+    {
         init();
     }
 
-    void init() {
+    void init()
+    {
         t.assign(2, Node());
         t[0].next.fill(1);
         t[0].len = -1;
     }
 
-    int newNode() {
+    int newNode()
+    {
         t.emplace_back();
         return t.size() - 1;
     }
 
-    int add(const std::string& a) {
+    int add(const std::string& a)
+    {
         int p = 1;
         for (auto c : a) {
             int x = c - 'a';
@@ -98,7 +115,8 @@ struct AhoCorasick {
         return p;
     }
 
-    void get_fail() {
+    void get_fail()
+    {
         std::queue<int> q;
         q.push(1);
 
@@ -118,7 +136,8 @@ struct AhoCorasick {
         }
     }
 
-    std::vector<int> work(std::string s) {
+    std::vector<int> work(std::string s)
+    {
         get_fail();
         int p = 1;
         std::vector<int> f(t.size());
@@ -137,24 +156,28 @@ struct AhoCorasick {
                 dfs(y);
                 f[x] += f[y];
             }
-            };
+        };
         dfs(1);
         return f;
     }
 
-    int next(int p, int x) {
+    int next(int p, int x)
+    {
         return t[p].next[x];
     }
 
-    int link(int p) {
+    int link(int p)
+    {
         return t[p].link;
     }
 
-    int len(int p) {
+    int len(int p)
+    {
         return t[p].len;
     }
 
-    int size() {
+    int size()
+    {
         return t.size();
     }
 };

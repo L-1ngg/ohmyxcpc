@@ -5,25 +5,26 @@ order: 8
 
 # 后缀数组（SA）
 
-以 $\mathcal O(N)$ 的复杂度求解。
+以 $\mathcal O(N \log N)$ 的复杂度求解（倍增 + 计数排序）。
 
 ```cpp
 struct SuffixArray {
     int n;
-    vector<int> sa, rk, lc;
-    SuffixArray(const string &s) {
+    std::vector<int> sa, rk, lc;
+    SuffixArray(const std::string &s)
+    {
         n = s.length();
         sa.resize(n);
         lc.resize(n - 1);
         rk.resize(n);
-        iota(sa.begin(), sa.end(), 0);
-        sort(sa.begin(), sa.end(), [&](int a, int b) { return s[a] < s[b]; });
+        std::iota(sa.begin(), sa.end(), 0);
+        std::sort(sa.begin(), sa.end(), [&](int a, int b) { return s[a] < s[b]; });
         rk[sa[0]] = 0;
         for (int i = 1; i < n; ++i) {
             rk[sa[i]] = rk[sa[i - 1]] + (s[sa[i]] != s[sa[i - 1]]);
         }
         int k = 1;
-        vector<int> tmp, cnt(n);
+        std::vector<int> tmp, cnt(n);
         tmp.reserve(n);
         while (rk[sa[n - 1]] < n - 1) {
             tmp.clear();
@@ -35,7 +36,7 @@ struct SuffixArray {
                     tmp.push_back(i - k);
                 }
             }
-            fill(cnt.begin(), cnt.end(), 0);
+            std::fill(cnt.begin(), cnt.end(), 0);
             for (int i = 0; i < n; ++i) {
                 ++cnt[rk[i]];
             }
@@ -45,7 +46,7 @@ struct SuffixArray {
             for (int i = n - 1; i >= 0; --i) {
                 sa[--cnt[rk[tmp[i]]]] = tmp[i];
             }
-            swap(rk, tmp);
+            std::swap(rk, tmp);
             rk[sa[0]] = 0;
             for (int i = 1; i < n; ++i) {
                 rk[sa[i]] = rk[sa[i - 1]] + (tmp[sa[i - 1]] < tmp[sa[i]] || sa[i - 1] + k == n ||

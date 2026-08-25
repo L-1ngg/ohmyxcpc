@@ -6,9 +6,10 @@ order: 6
 # Manacher（马拉车）
 
 ```cpp
-struct Manachar {
+struct Manacher {
     std::vector<int> d1, d2;
-    Manachar(std::string s) {
+    Manacher(std::string s)
+    {
         int n = s.length();
         d1.assign(n, 0);
         d2.assign(n, 0);
@@ -31,7 +32,8 @@ struct Manachar {
             }
         }
     }
-    bool check(int l, int r) {
+    bool check(int l, int r)
+    {
         if (r < l)return false;
         int len = r - l + 1;
         if (len % 2) {

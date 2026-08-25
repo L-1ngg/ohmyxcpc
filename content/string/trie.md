@@ -10,14 +10,16 @@ order: 7
 ```cpp
 struct Trie {
     int ch[N][63], cnt[N], idx = 0;
-    map<char, int> mp;
-    void init() {
-        LL id = 0;
+    std::map<char, int> mp;
+    void init()
+    {
+        i64 id = 0;
         for (char c = 'a'; c <= 'z'; c++) mp[c] = ++id;
         for (char c = 'A'; c <= 'Z'; c++) mp[c] = ++id;
         for (char c = '0'; c <= '9'; c++) mp[c] = ++id;
     }
-    void insert(string s) {
+    void insert(std::string s)
+    {
         int u = 0;
         for (int i = 0; i < s.size(); i++) {
             int v = mp[s[i]];
@@ -26,7 +28,8 @@ struct Trie {
             cnt[u]++;
         }
     }
-    LL query(string s) {
+    i64 query(std::string s)
+    {
         int u = 0;
         for (int i = 0; i < s.size(); i++) {
             int v = mp[s[i]];
@@ -35,7 +38,8 @@ struct Trie {
         }
         return cnt[u];
     }
-    void Clear() {
+    void Clear()
+    {
         for (int i = 0; i <= idx; i++) {
             cnt[i] = 0;
             for (int j = 0; j <= 62; j++) {
@@ -52,13 +56,15 @@ struct Trie {
 ```cpp
 struct Trie {
     int n, idx;
-    vector<vector<int>> ch;
-    Trie(int n) {
+    std::vector<std::vector<int>> ch;
+    Trie(int n)
+    {
         this->n = n;
         idx = 0;
-        ch.resize(30 * (n + 1), vector<int>(2));
+        ch.resize(30 * (n + 1), std::vector<int>(2));
     }
-    void insert(int x) {
+    void insert(int x)
+    {
         int u = 0;
         for (int i = 30; ~i; i--) {
             int &v = ch[u][x >> i & 1];
@@ -66,7 +72,8 @@ struct Trie {
             u = v;
         }
     }
-    int query(int x) {
+    int query(int x)
+    {
         int u = 0, res = 0;
         for (int i = 30; ~i; i--) {
             int v = x >> i & 1;

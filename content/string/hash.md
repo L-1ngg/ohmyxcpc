@@ -10,14 +10,15 @@ order: 5
 随机质数列表：1111111121、1211111123、1311111119。
 
 ```cpp
-const int N = 1 << 21;
+const int LIM = 1 << 21;
 static const int mod1 = 1E9 + 7, base1 = 127;
 static const int mod2 = 1E9 + 9, base2 = 131;
 using U = Zmod<mod1>;
 using V = Zmod<mod2>;
-vector<U> val1;
-vector<V> val2;
-void init(int n = N) {
+std::vector<U> val1;
+std::vector<V> val2;
+void init(int n = LIM)
+{
     val1.resize(n + 1), val2.resize(n + 2);
     val1[0] = 1, val2[0] = 1;
     for (int i = 1; i <= n; i++) {
@@ -26,26 +27,30 @@ void init(int n = N) {
     }
 }
 struct String {
-    vector<U> hash1;
-    vector<V> hash2;
-    string s;
+    std::vector<U> hash1;
+    std::vector<V> hash2;
+    std::string s;
 
-    String(string s_) : s(s_), hash1{1}, hash2{1} {
+    String(std::string s_) : s(s_), hash1{1}, hash2{1}
+    {
         for (auto it : s) {
             hash1.push_back(hash1.back() * base1 + it);
             hash2.push_back(hash2.back() * base2 + it);
         }
     }
-    pair<U, V> get() { // 输出整串的哈希值
+    std::pair<U, V> get() // 输出整串的哈希值
+    {
         return {hash1.back(), hash2.back()};
     }
-    pair<U, V> substring(int l, int r) { // 输出子串的哈希值
-        if (l > r) swap(l, r);
+    std::pair<U, V> substring(int l, int r) // 输出子串的哈希值
+    {
+        if (l > r) std::swap(l, r);
         U ans1 = hash1[r + 1] - hash1[l] * val1[r - l + 1];
         V ans2 = hash2[r + 1] - hash2[l] * val2[r - l + 1];
         return {ans1, ans2};
     }
-    pair<U, V> modify(int idx, char x) { // 修改 idx 位为 x
+    std::pair<U, V> modify(int idx, char x) // 修改 idx 位为 x
+    {
         int n = s.size() - 1;
         U ans1 = hash1.back() + val1[n - idx] * (x - s[idx]);
         V ans2 = hash2.back() + val2[n - idx] * (x - s[idx]);
@@ -59,10 +64,11 @@ struct String {
 `sample please ease` 去重后得到 `samplease`。
 
 ```cpp
-string compress(vector<string> in) { // 前后缀压缩
-    vector<U> hash1{1};
-    vector<V> hash2{1};
-    string ans = "#";
+std::string compress(std::vector<std::string> in) // 前后缀压缩
+{
+    std::vector<U> hash1{1};
+    std::vector<V> hash2{1};
+    std::string ans = "#";
     for (auto s : in) {
         s = "#" + s;
         int st = 0;
@@ -86,4 +92,4 @@ string compress(vector<string> in) { // 前后缀压缩
 }
 ```
 
-> [!WARNING] 待补充：封装依赖 `Zmod` 取模类模板，原文未包含其定义。
+> [!WARNING] 待补充：封装依赖 `Zmod` 取模类模板，原文未包含其定义，可参照 [取模类](/misc/modint) 实现。
