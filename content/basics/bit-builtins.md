@@ -15,4 +15,4 @@ __builtin_ctz(x) // 返回x二进制下后导0的个数，1(1) 返回 0，8(1000
 bit_width(x) // 返回x二进制下的位数，9(1001) 返回 4，26(11010) 返回 5
 ```
 
-注：以上函数的 `long long` 版本只需要在函数后面加上 `ll` 即可（例如 `__builtin_popcountll(x)`），`unsigned long long` 加上 `ull`。
+注：以上函数的 `long long` 版本只需要在函数后面加上 `ll` 即可（例如 `__builtin_popcountll(x)`），`unsigned long long` 加上 `ull`。`__builtin_*` 为 GCC 内建函数；`bit_width` 为 C++20 标准库内容（`<bit>` 头文件）。

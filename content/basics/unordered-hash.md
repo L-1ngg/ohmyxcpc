@@ -19,7 +19,7 @@ struct hash_pair {
         return std::hash<T1>()(p.first) ^ std::hash<T2>()(p.second);
     }
 };
-std::unordered_set<std::pair<int, int>, int, hash_pair> S;
+std::unordered_set<std::pair<int, int>, hash_pair> S;
 std::unordered_map<std::tuple<int, int, int>, int, hash_pair> M;
 ```
 
@@ -33,7 +33,7 @@ struct fff {
     int z;
     friend bool operator==(const fff &a, const fff &b)
     {
-        return a.x == b.x || a.y == b.y || a.z == b.z;
+        return a.x == b.x && a.y == b.y && a.z == b.z;
     }
 };
 struct hash_fff {

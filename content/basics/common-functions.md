@@ -90,28 +90,6 @@ do {
 } while (std::next_permutation(a.begin(), a.end()));
 ```
 
-## 字符串转换为数值函数 sto
-
-可以快捷的将**一串字符串**转换为**指定进制的数字**。
-
-使用方法
-
-- `stoi(字符串, 0, x进制)`：将一串 $x$ 进制的字符串转换为 `int` 型数字。
-
-![](https://img2020.cnblogs.com/blog/2491503/202201/2491503-20220117162754548-696368550.png)
-
-- `stoll(字符串, 0, x进制)`：将一串 $x$ 进制的字符串转换为 `long long` 型数字。
-- `stoull，stod，stold` 同理。
-
-## 数值转换为字符串函数 to_string
-
-允许将**各种数值类型**转换为字符串类型。
-
-```cpp
-//将数值num转换为字符串s
-std::string s = std::to_string(num);
-```
-
 ## 判断非递减 is_sorted
 
 ```cpp
@@ -132,4 +110,4 @@ std::cout << std::accumulate(a + start, a + end, x);
 
 `log2(x)`：返回 $\log_2(x)$
 
-`gcd(x, y) / lcm(x, y)`：以 $\log$ 的复杂度返回 $\gcd(|x|, |y|)$ 与 ${\tt lcm}(|x|, |y|)$，且返回值符号也为正数。
+`gcd(x, y) / lcm(x, y)`：以 $\log$ 的复杂度返回 $\gcd(|x|, |y|)$ 与 ${\tt lcm}(|x|, |y|)$，且返回值符号也为正数。（C++17 起，位于 `<numeric>` 头文件）

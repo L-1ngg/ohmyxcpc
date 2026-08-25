@@ -6,16 +6,6 @@ order: 1
 # 常用函数
 
 ```cpp
-i64 qpow(i64 x, i64 b){
-    i64 ret = 1;
-    while(b){
-        if(b & 1) ret = ret * x % mod;
-        b >>= 1;
-        x = x * x % mod;
-    }
-    return ret;
-}
-
 i64 mysqrt(i64 n) // 针对 sqrt 无法精确计算 ll 型
 {
     i64 ans = sqrt(n);
@@ -23,7 +13,6 @@ i64 mysqrt(i64 n) // 针对 sqrt 无法精确计算 ll 型
     while (ans * ans > n) ans--;
     return ans;
 }
-
 int mylcm(int x, int y)
 {
     return x / std::gcd(x, y) * y;
@@ -31,24 +20,6 @@ int mylcm(int x, int y)
 ```
 
 ```cpp
-template<typename T> int log2floor(T n) // 针对 log2 无法精确计算 ll 型；向下取整
-{
-    assert(n > 0);
-    for (T i = 0, chk = 1;; i++, chk *= 2) {
-        if (chk <= n && n < chk * 2) {
-            return i;
-        }
-    }
-}
-template<typename T> int log2ceil(T n) // 向上取整
-{
-    assert(n > 0);
-    for (T i = 0, chk = 1;; i++, chk *= 2) {
-        if (n <= chk) {
-            return i;
-        }
-    }
-}
 int log2floor(int x)
 {
     return 31 - __builtin_clz(x);
@@ -77,3 +48,6 @@ template<typename T> T ceil(const T &a, const T &b) // 注意大数据计算时�
     return sign(a) * sign(b) > 0 ? (A + B - 1) / B : -A / B;
 }
 ```
+
+> [!NOTE]
+> 快速幂模板见数论章节 [扩展欧几里得 exgcd](/math/ex-euler)（`qpow`）。
