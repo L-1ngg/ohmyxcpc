@@ -147,14 +147,17 @@ export function mdToTypst(src, { images = {} } = {}) {
         const [head, ...body] = rows
         const cell = c => `[${c ?? ''}]`
         out.push(`\n#table(columns: ${cols}, inset: 5pt, stroke: 0.4pt + luma(180),\n` +
-          `  table.header(${head.map(c => `[*${c}*]`).join('')}),` +
+          `  table.header(${head.map(c => `[*${c}*]`).join(', ')}),` +
           body.map(r => `\n  ${r.map(cell).join(',')},`).join('') + '\n)\n')
         break
       }
       default: break
     }
   }
-  return out.join('').replace(/\n{3,}/g, '\n\n').trim() + '\n'
+  return out.join('').replace(/\n{3,}/g, '\n\n')
+    // #mi(...) 紧跟 ( 或 [ 会被 typst 解析为链式调用，插入空格断开
+    .replace(/(#mi(?:tex)?\((?:`[^`]*`|"(?:\\.|[^"\\])*")\))(?=[(\[])/g, '$1 ')
+    .trim() + '\n'
 }
 
 // ---- 站点 Markdown 预处理：frontmatter、代码片段导入、VitePress 容器 ----
