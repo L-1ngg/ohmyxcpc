@@ -1,0 +1,13 @@
+---
+title: 编译器设置
+order: 21
+---
+
+# 编译器设置
+
+```bash
+g++ -O2 -std=c++20 -pipe
+-Wall -Wextra -Wconversion /* 这部分是警告相关，可能用不到 */
+-fstack-protector
+-Wl,--stack=268435456
+```
