@@ -28,11 +28,15 @@ export default defineConfig({
     lineNumbers: true
   },
   themeConfig: {
+    logo: '/logo.png',
     nav: [
       { text: '首页', link: '/' },
       { text: '下载中心', link: '/export' }
     ],
     sidebar,
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/L-1ngg/ohmyxcpc' }
+    ],
     search: { provider: 'local' }
   }
 })
