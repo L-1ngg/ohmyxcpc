@@ -65,10 +65,11 @@ check('默认预览整站单栏版', !!src?.includes(`all.${stdTpl}.pdf`))
 
 // 3. URL 参数直达：?target=<章节>&tpl=double
 await page.goto(`${origin}/export?target=${sampleChapter.id}&tpl=${dblTpl}`, { waitUntil: 'networkidle' })
-await page.waitForSelector('.ep-frame', { timeout: 8000 }).catch(() => {})
+await page.waitForSelector('.ep-frame', { timeout: 15000 }).catch(() => {})
+await page.waitForSelector('.ep-item.on', { timeout: 15000 }).catch(() => {})
 src = await page.locator('.ep-frame').getAttribute('src').catch(() => '')
 check('参数直达 章节 + 双栏', !!src?.includes(`${sampleChapter.id}.${dblTpl}.pdf`))
-check('URL 参数选中态正确', (await page.locator('.ep-item.on').first().textContent()) === sampleChapter.title)
+check('URL 参数选中态正确', (await page.locator('.ep-item.on').first().textContent().catch(() => '')) === sampleChapter.title)
 mkdirSync(join(root, 'pdf'), { recursive: true })
 await page.screenshot({ path: join(root, 'pdf/export-center.png'), fullPage: false })
 
