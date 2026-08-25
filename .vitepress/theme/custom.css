@@ -12,3 +12,8 @@
 .export-page .VPDocFooter {
   display: none;
 }
+
+/* 代码块行高收紧（默认 1.7 偏宽） */
+:root {
+  --vp-code-line-height: 1.55;
+}

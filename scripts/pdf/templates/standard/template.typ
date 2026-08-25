@@ -32,6 +32,7 @@
   radius: 4pt,
 )
 #show raw.where(block: true): set text(size: 8.5pt, font: mono)
+#show raw.where(block: true): set par(leading: 0.45em) // 代码行距收紧
 #show raw.where(block: false): it => {
   set text(size: 0.85em, font: mono)
   box(fill: luma(240), outset: (x: 2pt, y: 2.5pt), radius: 2pt, it)
