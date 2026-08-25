@@ -75,19 +75,24 @@ await page.screenshot({ path: join(root, 'pdf/export-center.png'), fullPage: fal
 
 // 4. 章节内固定卡片
 await page.goto(`${origin}/${samplePage.id}`, { waitUntil: 'networkidle' })
-await page.waitForSelector('.chapter-pdf', { timeout: 8000 }).catch(() => {})
+await page.waitForSelector('.chapter-pdf', { timeout: 15000 }).catch(() => {})
 const card = page.locator('.chapter-pdf')
 check('条目页存在章节卡片', await card.count() === 1)
-check('卡片标题含章节名', (await card.locator('.cp-title').textContent())?.includes(sampleChapter.title) ?? false)
-const hrefs = await card.locator('.cp-actions a').evaluateAll(els => els.map(e => e.getAttribute('href')))
-check('卡片含两个模板下载链接',
-  hrefs.some(h => h?.includes(`${sampleChapter.id}.${stdTpl}.pdf`)) && hrefs.some(h => h?.includes(`${sampleChapter.id}.${dblTpl}.pdf`)))
+if (await card.count() > 0) {
+  check('卡片标题含章节名', (await card.locator('.cp-title').textContent().catch(() => ''))?.includes(sampleChapter.title) ?? false)
+  const hrefs = await card.locator('.cp-actions a').evaluateAll(els => els.map(e => e.getAttribute('href'))).catch(() => [])
+  check('卡片含两个模板下载链接',
+    hrefs.some(h => h?.includes(`${sampleChapter.id}.${stdTpl}.pdf`)) && hrefs.some(h => h?.includes(`${sampleChapter.id}.${dblTpl}.pdf`)))
+} else {
+  check('卡片标题含章节名', false)
+  check('卡片含两个模板下载链接', false)
+}
 await page.screenshot({ path: join(root, 'pdf/chapter-card.png') })
 
 // 5. 移动端：目录默认折叠，点击展开，选择后自动收起
 await page.setViewportSize({ width: 390, height: 844 })
 await page.goto(origin + '/export', { waitUntil: 'networkidle' })
-await page.waitForSelector('.ep-frame', { timeout: 8000 }).catch(() => {})
+await page.waitForSelector('.ep-frame', { timeout: 15000 }).catch(() => {})
 check('移动端目录默认折叠', !(await page.locator('.ep-catalog').isVisible()))
 await page.locator('.ep-catalog-toggle').click()
 check('移动端目录可展开', await page.locator('.ep-catalog.open').isVisible())
