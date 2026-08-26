@@ -10,7 +10,7 @@ hero:
   actions:
     - theme: brand
       text: 浏览模板
-      link: /graph/
+      link: /basics/
     - theme: alt
       text: 下载整站 PDF
       link: /export?target=all
