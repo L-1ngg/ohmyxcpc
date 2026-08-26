@@ -96,7 +96,7 @@ XCPC（ICPC/CCPC 等程序设计竞赛）选手通常维护个人/队伍的算�
 | 搜索 | VitePress 内置 local search（minisearch） | 零外部服务，离线可用 |
 | 包管理 | pnpm | 环境已具备，速度快 |
 
-### POC 已验证结论（详见 roadmap 文档）
+### POC 已验证结论（详见 design-decisions 文档）
 
 - 动态 sidebar：`content/graph/dinic.md` 放入即出现在「图论」章节下 ✔
 - 代码片段导入：`<<< @/snippets/dinic.cpp` 正常渲染 ✔
