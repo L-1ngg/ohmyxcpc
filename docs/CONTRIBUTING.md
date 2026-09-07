@@ -64,7 +64,7 @@ int mygcd(int a, int b)
 ```
 ````
 
-代码风格统一遵循 [code-style.md](../.agents/skills/xcpc-template-ingest/references/code-style.md)（`std::` 限定、`i64` 别名、函数 Allman 大括号等）。
+代码风格遵循 [code-style.md](../.agents/skills/xcpc-template-ingest/references/code-style.md)：保留迁入实现的接口、类型、依赖与作者注释，不按旧模板头批量改写。
 
 ### 引用完整代码文件
 
@@ -73,6 +73,10 @@ int mygcd(int a, int b)
 ```markdown
 <<< @/snippets/dinic.cpp
 ```
+
+网页和 PDF 都展开同一引用。来源代码含 `// @book-begin` 与 `// @book-end` 时，只展示两个标记之间的区域，并移除公共前导空格；标记外保留独立编译脚手架。未带标记的代码文件展示全文。缺失文件或不成对的标记会使构建失败。
+
+说明、公式和短示例只写在 Markdown 中，生成的 Typst 正文不手动修改。一级目录沿用来源章节，`index.md` 的 `order` 与条目的 `order` 共同决定网站和 PDF 顺序。标题可使用 `{#stable-anchor}` 定义稳定锚点；内部链接写为 `/章节/条目#stable-anchor`。单章 PDF 中指向其他章节的链接会指向对应网页。
 
 ### 行高亮与聚焦
 
@@ -140,7 +144,7 @@ $$\sum_{i=1}^{n} i = \frac{n(n+1)}{2}$$
 
 ```bash
 pnpm build                          # 构建无错误
-pnpm export:pdf <章节> standard     # PDF 导出无错误
+pnpm export:pdf <章节>              # 统一版式，导出本章并生成首页预览
 ```
 
 ## 更多语法

@@ -1,0 +1,160 @@
+{
+  "commit": "78423fe362ec0a849ef4b86b0e96d8f8a3dc9584",
+  "chapters": [
+    {
+      "chapter": "stl",
+      "blocks": 20,
+      "inlineCode": 72,
+      "images": 0,
+      "headings": 20,
+      "textMatches": true
+    },
+    {
+      "chapter": "basics",
+      "blocks": 14,
+      "inlineCode": 33,
+      "images": 0,
+      "headings": 13,
+      "textMatches": true
+    },
+    {
+      "chapter": "data-structure-a",
+      "blocks": 22,
+      "inlineCode": 101,
+      "images": 0,
+      "headings": 27,
+      "textMatches": true
+    },
+    {
+      "chapter": "data-structure-b",
+      "blocks": 7,
+      "inlineCode": 27,
+      "images": 0,
+      "headings": 7,
+      "textMatches": true
+    },
+    {
+      "chapter": "graph",
+      "blocks": 39,
+      "inlineCode": 53,
+      "images": 5,
+      "headings": 52,
+      "textMatches": true
+    },
+    {
+      "chapter": "tree",
+      "blocks": 14,
+      "inlineCode": 38,
+      "images": 0,
+      "headings": 17,
+      "textMatches": true
+    },
+    {
+      "chapter": "flow",
+      "blocks": 5,
+      "inlineCode": 28,
+      "images": 0,
+      "headings": 8,
+      "textMatches": true
+    },
+    {
+      "chapter": "string",
+      "blocks": 19,
+      "inlineCode": 54,
+      "images": 0,
+      "headings": 21,
+      "textMatches": true
+    },
+    {
+      "chapter": "dp",
+      "blocks": 26,
+      "inlineCode": 16,
+      "images": 0,
+      "headings": 16,
+      "textMatches": true
+    },
+    {
+      "chapter": "number-theory",
+      "blocks": 39,
+      "inlineCode": 53,
+      "images": 0,
+      "headings": 72,
+      "textMatches": true
+    },
+    {
+      "chapter": "combinatorics",
+      "blocks": 11,
+      "inlineCode": 39,
+      "images": 0,
+      "headings": 69,
+      "textMatches": true
+    },
+    {
+      "chapter": "linear-algebra",
+      "blocks": 4,
+      "inlineCode": 9,
+      "images": 0,
+      "headings": 6,
+      "textMatches": true
+    },
+    {
+      "chapter": "polynomial",
+      "blocks": 9,
+      "inlineCode": 33,
+      "images": 0,
+      "headings": 14,
+      "textMatches": true
+    },
+    {
+      "chapter": "game-theory",
+      "blocks": 4,
+      "inlineCode": 20,
+      "images": 0,
+      "headings": 16,
+      "textMatches": true
+    },
+    {
+      "chapter": "geometry",
+      "blocks": 48,
+      "inlineCode": 60,
+      "images": 0,
+      "headings": 54,
+      "textMatches": true
+    },
+    {
+      "chapter": "polygon",
+      "blocks": 11,
+      "inlineCode": 19,
+      "images": 0,
+      "headings": 15,
+      "textMatches": true
+    },
+    {
+      "chapter": "geometry-3d",
+      "blocks": 35,
+      "inlineCode": 22,
+      "images": 5,
+      "headings": 45,
+      "textMatches": true
+    },
+    {
+      "chapter": "examples",
+      "blocks": 9,
+      "inlineCode": 17,
+      "images": 1,
+      "headings": 13,
+      "textMatches": true
+    },
+    {
+      "chapter": "misc",
+      "blocks": 39,
+      "inlineCode": 127,
+      "images": 0,
+      "headings": 38,
+      "textMatches": true
+    }
+  ],
+  "codeFiles": 272,
+  "supportFiles": 1,
+  "allCodeAndImageBytesMatch": true
+}

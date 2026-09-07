@@ -2,9 +2,8 @@
 import { withBase } from 'vitepress'
 
 export interface PdfInfo { url: string; bytes: number }
-export interface PdfTarget { id: string; type: 'site' | 'chapter' | 'page'; title: string; chapter?: string; pdfs: Record<string, PdfInfo> }
-export interface PdfTemplate { id: string; name: string; description: string }
-export interface PdfManifest { generatedAt: string; templates: PdfTemplate[]; targets: PdfTarget[] }
+export interface PdfTarget { id: string; type: 'site' | 'chapter'; title: string; pdf: PdfInfo }
+export interface PdfManifest { generatedAt: string; targets: PdfTarget[] }
 
 let cache: Promise<PdfManifest | null> | null = null
 
@@ -17,8 +16,8 @@ export function loadManifest(): Promise<PdfManifest | null> {
   return cache
 }
 
-export function pdfUrl(t: PdfTarget, tpl: string): string {
-  const u = t.pdfs[tpl]?.url
+export function pdfUrl(t: PdfTarget): string {
+  const u = t.pdf.url
   return u ? withBase('/' + u) : ''
 }
 

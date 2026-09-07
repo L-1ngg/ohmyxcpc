@@ -1,0 +1,20 @@
+---
+title: "最小生成树(MST 问题)"
+order: 60
+---
+
+# 最小生成树 (MST 问题) {#s-8ddc503bbaae}
+
+  连通无向图上边权和最小的生成树。割性质：跨越当前割的最小边一定在某棵 MST 里。Kruskal 按边权排序再并查集合并；Prim 不断吸收离树最近的点。
+
+## （稠密图）Prim 算法 {#s-a0dc608d311c}
+
+  邻接矩阵，$\mathcal{O} ( N^{2} + M )$。思想同 Dijkstra：`d` 维护每个点到「已在树内点集」的最短边。不连通返回 INF。
+
+<<< @/snippets/code/图论/稠密图Prim-算法.cpp
+
+## （稀疏图）Kruskal 算法 {#s-1b0b627ef1f0}
+
+  边按权排序后依次加入，并查集判是否成环，加入 $n - 1$ 条即成树。$\mathcal{O} ( M \text{log} M )$，瓶颈在排序。不连通则边数不够。
+
+<<< @/snippets/code/图论/稀疏图Kruskal-算法.cpp

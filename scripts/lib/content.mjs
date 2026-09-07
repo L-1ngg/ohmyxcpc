@@ -14,7 +14,7 @@ export function parseMeta(src) {
 
 // 显示名：frontmatter title → 首个一级标题 → fallback
 export function titleOf(src, fallback) {
-  return parseMeta(src).title || src.match(/^#\s+(.+)$/m)?.[1].trim() || fallback
+  return parseMeta(src).title || src.match(/^#\s+(.+)$/m)?.[1].replace(/\s+\{#[\w-]+\}\s*$/, '').trim() || fallback
 }
 
 const EXCLUDED = name => /^[._]/.test(name) || name === 'snippets' || name === 'public'
@@ -63,3 +63,8 @@ export const chapterGroup = c => ({
     ...c.pages.map(p => ({ path: p.path, demote: true }))
   ]
 })
+
+export const bookGroups = chapters => [
+  { title: '前言与致谢', entries: [{ path: 'preface.md', demote: false }] },
+  ...chapters.map(chapterGroup)
+]

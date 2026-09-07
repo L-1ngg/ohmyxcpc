@@ -30,9 +30,13 @@ jobs:
           node-version: 24
           cache: pnpm
 
-      # PDF 字体依赖：中文（Noto Sans/Serif CJK）与西文（Liberation）
-      - name: Install fonts
-        run: sudo apt-get update && sudo apt-get install -y fonts-noto-cjk fonts-liberation
+      - name: Cache PDF fonts
+        uses: actions/cache@v4
+        with:
+          path: .cache/fonts
+          key: pdf-fonts-${{ hashFiles('scripts/fonts.json') }}
+
+      - uses: astral-sh/setup-uv@v6
 
       # typst 固定版本（与本地开发一致；升级时同步修改）
       - name: Cache typst
@@ -52,15 +56,18 @@ jobs:
         run: typst --version
 
       - run: pnpm install --frozen-lockfile
+      - run: pnpm setup:fonts
+      - run: pnpm typecheck
+      - name: Install Chromium
+        run: pnpm exec playwright-core install chromium-headless-shell
+      - run: pnpm test
+      - run: pnpm check:code
 
       # 先预生成 PDF 到 content/public/pdfs/，再构建站点（public 随构建复制进 dist）
       - run: pnpm prebuild:pdf
+      - run: pnpm check:pdf
 
       - run: pnpm build
-
-      # 冒烟测试：验证下载中心与章节卡片（需要 Chromium）
-      - name: Install Chromium for smoke test
-        run: npx playwright-core install chromium-headless-shell
 
       - name: Smoke test
         # 冒烟测试在 CI 全新环境中可能因渲染慢而抖动，不阻塞部署

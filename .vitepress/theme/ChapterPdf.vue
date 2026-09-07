@@ -22,11 +22,11 @@ const chapter = computed(() => {
   <div v-if="chapter" class="chapter-pdf">
     <div class="cp-title">本章 PDF · {{ chapter.title }}</div>
     <div class="cp-actions">
-      <a v-for="t in manifest!.templates" :key="t.id" :href="pdfUrl(chapter, t.id)" download>
-        {{ t.name }} <span class="cp-size">{{ fmtBytes(chapter.pdfs[t.id]?.bytes) }}</span>
+      <a :href="pdfUrl(chapter)" download>
+        下载本章 <span class="cp-size">{{ fmtBytes(chapter.pdf.bytes) }}</span>
       </a>
     </div>
-    <a class="cp-more" :href="`${withBase('/export')}?target=${chapter.id}`">预览与更多 →</a>
+    <a class="cp-more" :href="`${withBase('/export')}?target=${chapter.id}`">预览本章 →</a>
   </div>
 </template>
 

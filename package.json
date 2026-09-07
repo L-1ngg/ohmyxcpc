@@ -19,13 +19,22 @@
     "export:pdf": "node scripts/export-pdf.mjs",
     "prebuild:pdf": "node scripts/prebuild-pdfs.mjs",
     "release": "pnpm prebuild:pdf && pnpm build",
-    "smoke": "node scripts/smoke-export.mjs"
+    "smoke": "node scripts/smoke-export.mjs",
+    "setup:fonts": "node scripts/setup-fonts.mjs",
+    "typecheck": "vue-tsc --noEmit -p .vitepress/tsconfig.json",
+    "test": "node --test scripts/tests/*.test.mjs",
+    "check:code": "node scripts/check-code.mjs",
+    "check:pdf": "uv run --with pymupdf==1.26.7 --with pypdf==6.2.0 python scripts/check-pdfs.py"
   },
   "devDependencies": {
+    "@types/node": "^24.13.3",
     "markdown-it": "^15.0.0",
     "markdown-it-container": "^4.0.0",
     "markdown-it-mathjax3": "^4.3.2",
     "playwright-core": "^1.62.1",
-    "vitepress": "^1.6.4"
+    "typescript": "~5.9.3",
+    "vitepress": "^1.6.4",
+    "vue": "^3.5.41",
+    "vue-tsc": "~3.1.8"
   }
 }

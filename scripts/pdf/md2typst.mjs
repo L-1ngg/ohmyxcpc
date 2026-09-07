@@ -4,8 +4,7 @@
 import MarkdownIt from 'markdown-it'
 import math from 'markdown-it-mathjax3'
 import containerPlugin from 'markdown-it-container'
-import { readFileSync, existsSync } from 'node:fs'
-import { join, extname } from 'node:path'
+import { expandSnippets } from '../lib/snippets.mjs'
 
 const md = new MarkdownIt({ html: false }).use(math)
 
@@ -55,7 +54,7 @@ function fenceBlock(content, info) {
 }
 
 // ---- 行内 token 渲染 ----
-function renderInline(tokens, images) {
+function renderInline(tokens, options) {
   let out = ''
   const linkStack = []
   for (const t of tokens ?? []) {
@@ -73,30 +72,31 @@ function renderInline(tokens, images) {
       case 's_close': out += ']'; break
       case 'link_open': {
         const href = t.attrGet('href') ?? ''
-        const external = /^https?:\/\//.test(href)
-        linkStack.push(external ? href : null)
-        if (external) out += `#link("${href}")[`
+        const target = options.links?.[href]
+        const destination = target ? `<${target}>` : JSON.stringify(/^https?:\/\//.test(href) ? href : `https://l-1ngg.github.io/ohmyxcpc${href.startsWith('/') ? '' : '/'}${href}`)
+        linkStack.push(true)
+        out += `#link(${destination})[`
         break
       }
       case 'link_close': if (linkStack.pop()) out += ']'; break
       case 'image': {
         const src = t.attrGet('src') ?? ''
         const alt = (t.children ?? []).map(c => c.content).join('')
-        const local = !/^https?:\/\//.test(src) && images?.[src]
-        out += local ? `#image("${images[src]}")` : `[图：${esc(alt || src)}]`
+        const local = options.images?.[src]
+        if (!local) throw new Error(`Unresolved PDF image: ${src}`)
+        out += `#align(center)[#image(${JSON.stringify(local)}, alt: ${JSON.stringify(alt)})]`
         break
       }
-      default: break
+      default: throw new Error(`Unsupported inline Markdown token: ${t.type}`)
     }
   }
   return out
 }
 
 // ---- 主转换 ----
-export function mdToTypst(src, { images = {} } = {}) {
+export function mdToTypst(src, options = {}) {
   const tokens = md.parse(src, {})
   const out = []
-  const listStack = []
   for (let i = 0; i < tokens.length; i++) {
     const t = tokens[i]
     const cm = t.type.match(/^container_(\w+)_(open|close)$/)
@@ -112,24 +112,34 @@ export function mdToTypst(src, { images = {} } = {}) {
     }
     switch (t.type) {
       case 'heading_open': {
-        out.push(`${'='.repeat(Math.min(6, +t.tag.slice(1)))} ${renderInline(tokens[i + 1].children, images)}\n`)
+        const inline = tokens[i + 1]
+        const anchor = inline.content.match(/\s*\{#([\w-]+)\}\s*$/)?.[1]
+        if (anchor) {
+          const tail = inline.children.at(-1)
+          if (tail?.type !== 'text') throw new Error('Invalid heading anchor')
+          tail.content = tail.content.replace(/\s*\{#[\w-]+\}\s*$/, '')
+        }
+        const label = options.headingLabel?.(anchor, inline.content)
+        out.push(`${'='.repeat(Math.min(6, +t.tag.slice(1) + (options.headingOffset ?? 0)))} ${renderInline(inline.children, options)}${label ? ` <${label}>` : ''}\n`)
         i += 2
         break
       }
       case 'paragraph_open': if (!t.hidden) out.push('\n'); break
       case 'paragraph_close': if (!t.hidden) out.push('\n'); break
-      case 'inline': out.push(renderInline(t.children, images)); break
+      case 'inline': {
+        const unsupported = t.content.match(/^\s*:{3,}\s*(\w+)/m)
+        if (unsupported) throw new Error(`Unsupported Markdown container: ${unsupported[1]}`)
+        out.push(renderInline(t.children, options))
+        break
+      }
       case 'math_block': out.push(`\n${miDisplay(t.content)}\n`); break
       case 'fence': out.push(`\n${fenceBlock(t.content, t.info)}`); break
-      case 'bullet_list_open': listStack.push('-'); break
-      case 'ordered_list_open': listStack.push('+'); break
+      case 'bullet_list_open': out.push('\n#list(\n'); break
+      case 'ordered_list_open': out.push(`\n#enum(start: ${Number(t.attrGet('start') ?? 1)},\n`); break
       case 'bullet_list_close':
-      case 'ordered_list_close': listStack.pop(); out.push('\n'); break
-      case 'list_item_open':
-        if (out.length && !out.at(-1).endsWith('\n')) out.push('\n') // 嵌套列表换行
-        out.push(`${'  '.repeat(Math.max(0, listStack.length - 1))}${listStack.at(-1) ?? '-'} `)
-        break
-      case 'list_item_close': out.push('\n'); break
+      case 'ordered_list_close': out.push(')\n'); break
+      case 'list_item_open': out.push('['); break
+      case 'list_item_close': out.push('],\n'); break
       case 'blockquote_open': out.push('\n#quote(block: true)[\n'); break
       case 'blockquote_close': out.push(']\n'); break
       case 'hr': out.push('\n#line(length: 100%, stroke: 0.4pt)\n'); break
@@ -139,19 +149,20 @@ export function mdToTypst(src, { images = {} } = {}) {
         while (tokens[i] && tokens[i].type !== 'table_close') {
           const tt = tokens[i]
           if (tt.type === 'tr_open') cur = []
-          else if (tt.type === 'th_open' || tt.type === 'td_open') cur.push(renderInline(tokens[i + 1].children, images))
+          else if (tt.type === 'th_open' || tt.type === 'td_open') cur.push(renderInline(tokens[i + 1].children, options))
           else if (tt.type === 'tr_close') rows.push(cur)
           i++
         }
         const cols = Math.max(...rows.map(r => r.length), 1)
         const [head, ...body] = rows
         const cell = c => `[${c ?? ''}]`
-        out.push(`\n#table(columns: ${cols}, inset: 5pt, stroke: 0.4pt + luma(180),\n` +
-          `  table.header(${head.map(c => `[*${c}*]`).join(', ')}),` +
+        out.push(`\n#table(columns: ${cols},\n` +
+          `  table.header(${head.map(cell).join(', ')}),` +
           body.map(r => `\n  ${r.map(cell).join(',')},`).join('') + '\n)\n')
         break
       }
-      default: break
+      case 'code_block': out.push(`\n${fenceBlock(t.content, 'text')}`); break
+      default: throw new Error(`Unsupported block Markdown token: ${t.type}`)
     }
   }
   return out.join('').replace(/\n{3,}/g, '\n\n')
@@ -163,11 +174,5 @@ export function mdToTypst(src, { images = {} } = {}) {
 // ---- 站点 Markdown 预处理：frontmatter、代码片段导入、VitePress 容器 ----
 export function preprocessMd(src, contentDir) {
   src = src.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, '')
-  src = src.replace(/^<<<\s+@\/(\S+)\s*$/gm, (m, p) => {
-    const file = join(contentDir, p)
-    if (!existsSync(file)) return m
-    const lang = extname(file).slice(1) || 'txt'
-    return fenceBlock(readFileSync(file, 'utf8'), lang).trimEnd()
-  })
-  return src
+  return expandSnippets(src, contentDir)
 }

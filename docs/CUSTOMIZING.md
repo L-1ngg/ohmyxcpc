@@ -85,40 +85,29 @@ VitePress 还支持 `hero.image` 的光晕、渐变标题等效果，通过 CSS 
 
 ## 4. PDF 模板
 
-PDF 模板在 `scripts/pdf/templates/` 下，每个模板一个目录：
+PDF 统一采用 Templates-XCPC 的版式，只提供整本和按章节导出。
 
-```
-scripts/pdf/templates/
-├── standard/           # 单栏阅读版
-│   ├── meta.json       # { "name": "显示名", "description": "说明" }
-│   └── template.typ    # Typst 排版模板
-└── double/             # 双栏打印版
-    ├── meta.json
-    └── template.typ
-```
+- `scripts/pdf/theme.typ`：字体、页边距、章节标题、页眉、代码块、表格和图片样式。
+- `scripts/pdf/template.typ`：书名、作者元数据、双栏目录与正文页码的组装入口。整本导出传入 `cover=1`。
+- `scripts/pdf/assets/`：代码配色和额外语言定义。
+- `scripts/fonts.json`：字体下载来源、许可证名称与 SHA-256。运行 `pnpm setup:fonts` 后放在 `.cache/fonts/`，本地与 CI 共用。
 
-**改排版**：编辑 `template.typ`（Typst 语法），可调字体、字号、页眉页脚、行距、代码块样式等。模板内可用变量：
+日常正文与公式编辑在 Markdown 中完成，代码文件被网页和 PDF 共同引用。`scripts/pdf/.build/` 中的 Typst 是生成文件，不手工修改。章节顺序在章节首页的 frontmatter 中维护，条目顺序由各条目的 `order` 决定。
 
-| 变量 | 来源 | 说明 |
-|---|---|---|
-| `chapter` | `--input chapter=...` | 章节名（页眉右侧） |
-| `date` | `--input date=...` | 生成日期（封面） |
-| `cover=1` | 整站导出时传入 | 启用封面与目录页 |
-
-**新增模板**：新建一个目录（如 `compact/`），放入 `meta.json` 和 `template.typ`，即可通过 `pnpm export:pdf <章节> compact` 使用，下载中心也会自动出现该模板选项。
+运行 `pnpm export:pdf string` 检查单章，运行 `pnpm prebuild:pdf` 生成整本与全部章节。代码页、复杂公式、宽表格、目录链接和跨页内容都需要检查；书名、页眉和署名在模板中调整，前言与致谢在 `content/preface.md` 中维护。
 
 **Typst 版本**：锁定在 `.github/workflows/deploy.yml` 的 typst 缓存 key 和下载 URL 中，升级时两处同步修改。
 
 ## 5. 代码风格
 
-收录进条目的代码统一遵循 `../.agents/skills/xcpc-template-ingest/references/code-style.md` 中的规范（从竞赛模板头提炼）。如果你更换了模板头，同步更新该文件，后续收录的代码会自动对齐新风格。
+遵循 [代码维护规则](../.agents/skills/xcpc-template-ingest/references/code-style.md)，保留来源实现的接口、类型和依赖。调整站点外观或 PDF 样式不应改变算法代码。
 
 ## 不需要改的
 
 以下行为由构建管线自动处理，**不需要手动配置**：
 
 - 侧边栏生成与排序（扫描 `content/` 目录 + frontmatter `order`）
-- 下载中心的章节列表与模板选项（扫描 `scripts/pdf/templates/` + 构建产物）
+- 下载中心的整本与章节列表（共享章节扫描结果 + PDF 清单）
 - 章节内条目页的 PDF 下载卡片（自动注入）
 - 搜索索引（构建时自动生成）
 - 部署子路径适配（CI 注入 `VITEPRESS_BASE`，站内链接自动处理）

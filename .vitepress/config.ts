@@ -2,13 +2,15 @@ import { defineConfig } from 'vitepress'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { scanContent } from '../scripts/lib/content.mjs'
+import { expandSnippets } from '../scripts/lib/snippets.mjs'
 
 // 内容根目录（srcDir）
 const srcDir = join(dirname(fileURLToPath(import.meta.url)), '../content')
 
 // 扫描 content/ 自动生成 sidebar：一级子目录 = 章节，目录内 .md = 条目。
 // 排序与收录规则见 scripts/lib/content.mjs（与 PDF 导出共用同一数据源）。
-const sidebar = scanContent(srcDir).map(c => ({
+const chapters = scanContent(srcDir)
+const sidebar = chapters.map(c => ({
   text: c.title,
   collapsed: false,
   ...(c.index ? { link: `/${c.dir}/` } : {}),
@@ -25,13 +27,24 @@ export default defineConfig({
   cleanUrls: true,
   markdown: {
     math: true,
-    lineNumbers: true
+    lineNumbers: true,
+    config(md) {
+      md.core.ruler.before('normalize', 'shared-snippets', state => {
+        state.src = expandSnippets(state.src, srcDir)
+        const chapter = chapters.find(chapter => chapter.index === state.env.relativePath)
+        if (chapter) {
+          const items = chapter.pages.map(page => `- [${page.title.replace(/[\[\]]/g, '\\$&')}](./${page.slug})`)
+          state.src += '\n\n## 算法条目\n\n' + items.join('\n') + '\n'
+        }
+      })
+    }
   },
   themeConfig: {
     logo: '/logo.png',
     nav: [
       { text: '首页', link: '/' },
-      { text: '下载中心', link: '/export' }
+      { text: '下载中心', link: '/export' },
+      { text: '前言与致谢', link: '/preface' }
     ],
     sidebar,
     socialLinks: [
