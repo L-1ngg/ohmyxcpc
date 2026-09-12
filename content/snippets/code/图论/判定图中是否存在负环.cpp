@@ -1,10 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long i64;
-typedef long long ll;
-typedef long long LL;
-typedef long double ld;
-typedef unsigned long long u64;
+
+using ld = long double;
+using u64 = unsigned long long;
 const int MOD = 998244353;
 const int mod = 1000000007;
 const double eps = 1e-8;
@@ -12,36 +10,28 @@ const double PI = acos(-1.0);
 
 struct DSU {
     vector<int> fa;
-    DSU(int n) : fa(n + 1) {
-        iota(fa.begin(), fa.end(), 0);
-    }
+    DSU(int n) : fa(n + 1) { iota(fa.begin(), fa.end(), 0); }
     int get(int x) {
         while (x != fa[x]) {
             x = fa[x] = fa[fa[x]];
         }
         return x;
     }
-    bool merge(int x, int y) {  // 设x是y的祖先
+    bool merge(int x, int y) {
         x = get(x), y = get(y);
         if (x == y) return false;
         fa[y] = x;
         return true;
     }
-    bool same(int x, int y) {
-        return get(x) == get(y);
-    }
+    bool same(int x, int y) { return get(x) == get(y); }
 };
 struct Tree {
     using TII = tuple<int, int, int>;
     int n;
     priority_queue<TII, vector<TII>, greater<TII>> ver;
 
-    Tree(int n) {
-        this->n = n;
-    }
-    void add(int x, int y, int w) {
-        ver.emplace(w, x, y); // 注意顺序
-    }
+    Tree(int n) { this->n = n; }
+    void add(int x, int y, int w) { ver.emplace(w, x, y); }
     int kruskal() {
         DSU dsu(n);
         int ans = 0, cnt = 0;
@@ -53,7 +43,7 @@ struct Tree {
             ans += w;
             cnt++;
         }
-        assert(cnt == n - 1); // 图不连通时 cnt < n-1，此时无生成树（原断言条件写反）
+        assert(cnt == n - 1);
         return ans;
     }
 };
@@ -61,12 +51,10 @@ struct EDCC {
     int n, m, now, cnt;
     vector<vector<array<int, 2>>> ver;
     vector<int> dfn, low, col, S;
-    set<array<int, 2>> bridge, direct; // 如果不需要，删除这一部分可以得到一些时间上的优化
+    set<array<int, 2>> bridge, direct;
 
-    EDCC(int n) : n(n), low(n + 1), ver(n + 1), dfn(n + 1), col(n + 1) {
-        m = now = cnt = 0;
-    }
-    void add(int x, int y) {  // 和 scc 相比多了一条连边
+    EDCC(int n) : n(n), low(n + 1), ver(n + 1), dfn(n + 1), col(n + 1) { m = now = cnt = 0; }
+    void add(int x, int y) {
         ver[x].push_back({y, m});
         ver[y].push_back({x, m++});
     }
@@ -97,16 +85,12 @@ struct EDCC {
         }
     }
     auto work() {
-        for (int i = 1; i <= n; i++) { // 避免图不连通
+        for (int i = 1; i <= n; i++) {
             if (!dfn[i]) {
                 tarjan(i, 0);
             }
         }
-        /**
-         * @param cnt 新图的顶点数量, adj 新图, col 旧图节点对应的新图节点
-         * @param siz 旧图每一个边双中点的数量
-         * @param bridge 全部割边, direct 非割边定向
-         */
+
         vector<int> siz(cnt + 1);
         vector<vector<int>> adj(cnt + 1);
         for (int i = 1; i <= n; i++) {
@@ -126,7 +110,7 @@ struct V_DCC {
     vector<vector<int>> ver, col;
     vector<int> dfn, low, S;
     int now, cnt;
-    vector<bool> point;  // 记录是否为割点
+    vector<bool> point;
 
     V_DCC(int n) : n(n) {
         ver.resize(n + 1);
@@ -138,14 +122,14 @@ struct V_DCC {
         cnt = now = 0;
     }
     void add(int x, int y) {
-        if (x == y) return;  // 手动去除重边
+        if (x == y) return;
         ver[x].push_back(y);
         ver[y].push_back(x);
     }
     void tarjan(int x, int root) {
         low[x] = dfn[x] = ++now;
         S.push_back(x);
-        if (x == root && !ver[x].size()) {  // 特判孤立点
+        if (x == root && !ver[x].size()) {
             ++cnt;
             col[cnt].push_back(x);
             return;
@@ -159,7 +143,7 @@ struct V_DCC {
                 if (dfn[x] <= low[y]) {
                     flag++;
                     if (x != root || flag > 1) {
-                        point[x] = true;  // 标记为割点
+                        point[x] = true;
                     }
                     int pre = 0;
                     cnt++;
@@ -175,20 +159,20 @@ struct V_DCC {
             }
         }
     }
-    pair<int, vector<vector<int>>> rebuild() {  // [新图的顶点数量, 新图]：点双与割点构成的二分图
+    pair<int, vector<vector<int>>> rebuild() {
         work();
-        vector<int> cutId(n + 1); // 割点在新图中的编号（原来把 point[j] 当编号推入，多个割点会全部指向 1）
+        vector<int> cutId(n + 1);
         int tot = cnt;
         for (int i = 1; i <= n; i++) {
             if (point[i]) cutId[i] = ++tot;
         }
         vector<vector<int>> adj(tot + 1);
         for (int i = 1; i <= cnt; i++) {
-            if (!col[i].size()) { // 注意，孤立点也是 V-DCC
+            if (!col[i].size()) {
                 continue;
             }
             for (auto j : col[i]) {
-                if (point[j]) {  // 如果 j 是割点
+                if (point[j]) {
                     adj[i].push_back(cutId[j]);
                     adj[cutId[j]].push_back(i);
                 }
@@ -197,7 +181,7 @@ struct V_DCC {
         return {tot, adj};
     }
     void work() {
-        for (int i = 1; i <= n; ++i) {  // 避免图不连通
+        for (int i = 1; i <= n; ++i) {
             if (!dfn[i]) {
                 tarjan(i, i);
             }
@@ -249,9 +233,7 @@ struct TwoSat {
         }
         return true;
     }
-    vector<bool> answer() {
-        return ans;
-    }
+    vector<bool> answer() { return ans; }
 };
 
 // @book-begin
@@ -260,23 +242,25 @@ int n, m;
 int ver[M], ne[M], h[N], edge[M], tot;
 int d[N], v[N], num[N];
 
-void add(int x, int y, int w)  {
-    ver[++ tot] = y, ne[tot] = h[x], h[x] = tot;
+void add(int x, int y, int w) {
+    ver[++tot] = y, ne[tot] = h[x], h[x] = tot;
     edge[tot] = w;
 }
 bool spfa() {
     queue<int> q;
-    for (int i = 1; i <= n; ++ i) q.push(i), v[i] = 1;  //全部入队
-    while(!q.empty()) {
-        int x = q.front(); q.pop();
+    for (int i = 1; i <= n; ++i)
+        q.push(i), v[i] = 1;
+    while (!q.empty()) {
+        int x = q.front();
+        q.pop();
         v[x] = 0;
         for (int i = h[x]; i; i = ne[i]) {
             int y = ver[i];
-            if(d[y] > d[x] + edge[i]) {
+            if (d[y] > d[x] + edge[i]) {
                 num[y] = num[x] + 1;
                 if (num[y] >= n) return true;
                 d[y] = d[x] + edge[i];
-                if(!v[y]) q.push(y), v[y] = 1;
+                if (!v[y]) q.push(y), v[y] = 1;
             }
         }
     }
@@ -284,11 +268,14 @@ bool spfa() {
 }
 int main() {
     cin >> n >> m;
-    for (int i = 1; i <= m; ++ i) {
-        int x, y, w; cin >> x >> y >> w;
+    for (int i = 1; i <= m; ++i) {
+        int x, y, w;
+        cin >> x >> y >> w;
         add(x, y, w);
     }
-    if(spfa() == true) cout << "Yes" << endl;
-    else cout << "No" << endl;
+    if (spfa() == true)
+        cout << "Yes" << endl;
+    else
+        cout << "No" << endl;
 }
 // @book-end

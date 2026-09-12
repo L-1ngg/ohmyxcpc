@@ -3,13 +3,13 @@ int n, m;
 
 // @book-begin
 int main() {
-    vector<int> val;  // 堆数
+    vector<int> val;
     for (int i = 1, x; i <= n; i++) {
         cin >> x;
-        int it = upper_bound(val.begin(), val.end(), x) - val.begin();  // low/upp: 严格/非严格递增
-        if (it >= val.size()) {  // 新增一堆
+        int it = upper_bound(val.begin(), val.end(), x) - val.begin();
+        if (it >= val.size()) {
             val.push_back(x);
-        } else {  // 更新对应位置元素
+        } else {
             val[it] = x;
         }
     }

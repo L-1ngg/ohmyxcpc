@@ -2,8 +2,8 @@ signed main() {
     int n, m;
     cin >> n >> m;
 
-    DSU dsu(n + 1);  // 如果保证连通，则不需要 DSU
-    vector<unordered_multiset<int>> ver(n + 1);  // 如果对于字典序有要求，则不能使用 unordered
+    DSU dsu(n + 1);
+    vector<unordered_multiset<int>> ver(n + 1);
     vector<int> degI(n + 1), degO(n + 1);
     for (int i = 1; i <= m; i++) {
         int x, y;
@@ -11,7 +11,7 @@ signed main() {
         ver[x].insert(y);
         degI[y]++;
         degO[x]++;
-        dsu.merge(x, y);  // 直接当无向图
+        dsu.merge(x, y);
     }
     int s = 1, t = 1, cnt = 0;
     for (int i = 1; i <= n; i++) {

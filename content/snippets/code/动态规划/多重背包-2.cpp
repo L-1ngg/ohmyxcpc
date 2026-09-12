@@ -1,10 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long i64;
-typedef long long ll;
-typedef long long LL;
-typedef long double ld;
-typedef unsigned long long u64;
+
+using ld = long double;
+using u64 = unsigned long long;
 const int MOD = 998244353;
 const int mod = 1000000007;
 const int N = 1000005;
@@ -25,10 +23,10 @@ int y;
 
 // @book-begin
 int main() {
-    for (int i = 1; i <= n; i++){
-        scanf("%lld%lld%lld", &x, &y, &s);  //x 为体积， y 为价值， s 为数量
+    for (int i = 1; i <= n; i++) {
+        scanf("%lld%lld%lld", &x, &y, &s);
         t = 1;
-        while (s >= t){
+        while (s >= t) {
             w[++num] = x * t;
             v[num] = y * t;
             s -= t;

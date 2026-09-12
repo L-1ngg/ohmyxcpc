@@ -1,12 +1,14 @@
 using i128 = __int128;
 
-std::istream& operator>>(std::istream& is, i128& n) {
-    std::string s;is >> s;
+std::istream &operator>>(std::istream &is, i128 &n) {
+    std::string s;
+    is >> s;
     n = 0;
-    for (char i : s) n = n * 10 + i - '0';
+    for (char i : s)
+        n = n * 10 + i - '0';
     return is;
 }
-std::ostream& operator<<(std::ostream& os, i128 n) {
+std::ostream &operator<<(std::ostream &os, i128 n) {
     if (n == 0) {
         return os << 0;
     }

@@ -1,17 +1,16 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long i64;
-typedef long long ll;
-typedef long long LL;
-typedef long double ld;
-typedef unsigned long long u64;
+
+using i64 = long long;
+using ld = long double;
+using u64 = unsigned long long;
 const int MOD = 998244353;
 const int mod = 1000000007;
 const int M = 2000005;
 const double eps = 1e-8;
 const double PI = acos(-1.0);
 
-template<typename T, typename Cmp = less<T>> struct RMQ {
+template <typename T, typename Cmp = less<T>> struct RMQ {
     const Cmp cmp = Cmp();
     static constexpr unsigned B = 64;
     using u64 = unsigned long long;
@@ -20,9 +19,7 @@ template<typename T, typename Cmp = less<T>> struct RMQ {
     vector<T> pre, suf, ini;
     vector<u64> stk;
     RMQ() {}
-    RMQ(const vector<T> &v) {
-        init(v);
-    }
+    RMQ(const vector<T> &v) { init(v); }
     void init(const vector<T> &v) {
         n = v.size();
         pre = suf = ini = v;
@@ -86,42 +83,38 @@ template<typename T, typename Cmp = less<T>> struct RMQ {
 struct ODT {
     struct node {
         int l, r;
-        mutable LL v;
-        node(int l, int r = -1, LL v = 0) : l(l), r(r), v(v) {}
-        bool operator<(const node &o) const {
-            return l < o.l;
-        }
+        mutable i64 v;
+        node(int l, int r = -1, i64 v = 0) : l(l), r(r), v(v) {}
+        bool operator<(const node &o) const { return l < o.l; }
     };
     set<node> s;
-    ODT() {
-        s.clear();
-    }
+    ODT() { s.clear(); }
     auto split(int pos) {
         auto it = s.lower_bound(node(pos));
         if (it != s.end() && it->l == pos) return it;
         it--;
         int l = it->l, r = it->r;
-        LL v = it->v;
+        i64 v = it->v;
         s.erase(it);
         s.insert(node(l, pos - 1, v));
         return s.insert(node(pos, r, v)).first;
     }
-    void assign(int l, int r, LL x) {
+    void assign(int l, int r, i64 x) {
         auto itr = split(r + 1), itl = split(l);
         s.erase(itl, itr);
         s.insert(node(l, r, x));
     }
-    void add(int l, int r, LL x) {
+    void add(int l, int r, i64 x) {
         auto itr = split(r + 1), itl = split(l);
         for (auto it = itl; it != itr; it++) {
             it->v += x;
         }
     }
-    LL kth(int l, int r, int k) {
-        vector<pair<LL, int>> a;
+    i64 kth(int l, int r, int k) {
+        vector<pair<i64, int>> a;
         auto itr = split(r + 1), itl = split(l);
         for (auto it = itl; it != itr; it++) {
-            a.push_back(pair<LL, int>(it->v, it->r - it->l + 1));
+            a.push_back(pair<i64, int>(it->v, it->r - it->l + 1));
         }
         sort(a.begin(), a.end());
         for (auto [val, len] : a) {
@@ -129,9 +122,9 @@ struct ODT {
             if (k <= 0) return val;
         }
     }
-    LL power(LL a, int b, int mod) {
+    i64 power(i64 a, int b, int mod) {
         a %= mod;
-        LL res = 1;
+        i64 res = 1;
         for (; b; b /= 2, a = a * a % mod) {
             if (b % 2) {
                 res = res * a % mod;
@@ -139,9 +132,9 @@ struct ODT {
         }
         return res;
     }
-    LL powersum(int l, int r, int x, int mod) {
+    i64 powersum(int l, int r, int x, int mod) {
         auto itr = split(r + 1), itl = split(l);
-        LL ans = 0;
+        i64 ans = 0;
         for (auto it = itl; it != itr; it++) {
             ans = (ans + power(it->v, x, mod) * (it->r - it->l + 1) % mod) % mod;
         }
@@ -159,8 +152,8 @@ signed main() {
         cin >> w[i];
     }
 
-    vector<array<int, 4>> query = {{}};  // {左区间, 右区间, 累计修改次数, 下标}
-    vector<array<int, 2>> modify = {{}};  // {修改的值, 修改的元素下标}
+    vector<array<int, 4>> query = {{}};
+    vector<array<int, 2>> modify = {{}};
     for (int i = 1; i <= q; i++) {
         char op;
         cin >> op;
@@ -175,9 +168,9 @@ signed main() {
         }
     }
 
-    int Knum = max(1, (int)pow(n, 2.0 / 3));  // 带修莫队块长取 n^(2/3) 最优（原来写死 2154，须按 n 改）
+    int Knum = max(1, (int)pow(n, 2.0 / 3));
     vector<int> K(n + 1);
-    for (int i = 1; i <= n; i++) {  // 固定块长
+    for (int i = 1; i <= n; i++) {
         K[i] = (i - 1) / Knum + 1;
     }
     sort(query.begin() + 1, query.end(), [&](auto x, auto y) {
@@ -187,32 +180,38 @@ signed main() {
     });
 
     int l = 1, r = 0, val = 0;
-    int t = 0;  // 累计修改次数
+    int t = 0;
     vector<int> ans(query.size()), cnt(N);
     for (int i = 1; i < query.size(); i++) {
         auto [ql, qr, qt, id] = query[i];
         auto add = [&](int x) -> void {
-            if (cnt[x] == 0) ++ val;
-            ++ cnt[x];
+            if (cnt[x] == 0) ++val;
+            ++cnt[x];
         };
         auto del = [&](int x) -> void {
-            -- cnt[x];
-            if (cnt[x] == 0) -- val;
+            --cnt[x];
+            if (cnt[x] == 0) --val;
         };
         auto time = [&](int x, int l, int r) -> void {
-            if (l <= modify[x][1] && modify[x][1] <= r) {  //当修改的位置在询问期间内部时才会改变num的值
+            if (l <= modify[x][1] && modify[x][1] <= r) {
                 del(w[modify[x][1]]);
                 add(modify[x][0]);
             }
-            //直接交换修改数组的值与原始值，减少额外的数组开销，且方便复原
+
             swap(w[modify[x][1]], modify[x][0]);
         };
-        while (l > ql) add(w[--l]);
-        while (r < qr) add(w[++r]);
-        while (l < ql) del(w[l++]);
-        while (r > qr) del(w[r--]);
-        while (t < qt) time(++t, ql, qr);
-        while (t > qt) time(t--, ql, qr);
+        while (l > ql)
+            add(w[--l]);
+        while (r < qr)
+            add(w[++r]);
+        while (l < ql)
+            del(w[l++]);
+        while (r > qr)
+            del(w[r--]);
+        while (t < qt)
+            time(++t, ql, qr);
+        while (t > qt)
+            time(t--, ql, qr);
         ans[id] = val;
     }
     for (int i = 1; i < ans.size(); i++) {

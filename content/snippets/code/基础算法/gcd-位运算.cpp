@@ -1,10 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long i64;
-typedef long long ll;
-typedef long long LL;
-typedef long double ld;
-typedef unsigned long long u64;
+
+using i64 = long long;
+using ld = long double;
+using u64 = unsigned long long;
 const int MOD = 998244353;
 const int mod = 1000000007;
 const int N = 1000005;
@@ -13,8 +12,9 @@ const double eps = 1e-8;
 const double PI = acos(-1.0);
 
 // @book-begin
-LL gcd(LL a, LL b) {  // 卡常 gcd！！（LL 为 long long）
-    #define tz __builtin_ctzll
+using i64 = long long;
+i64 gcd(i64 a, i64 b) {
+#define tz __builtin_ctzll
     if (!a || !b) return a | b;
     int t = tz(a | b);
     a >>= tz(a);
@@ -24,8 +24,10 @@ LL gcd(LL a, LL b) {  // 卡常 gcd！！（LL 为 long long）
         b -= a;
     }
     return a << t;
-    #undef tz
+#undef tz
 }
 // @book-end
 
-int main() { return 0; }
+int main() {
+    return 0;
+}

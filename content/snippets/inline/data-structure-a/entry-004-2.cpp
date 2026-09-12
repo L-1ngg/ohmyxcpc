@@ -1,8 +1,8 @@
 struct BIT {
     int n;
-    vector<int> w, chk;  // chk 为传入的待处理数组
+    vector<int> w, chk;
     BIT(int n, auto &in) : n(n), w(n + 1), chk(in) {}
-    /* 需要全部常规封装 */
+
     int get() {
         vector<array<int, 2>> alls;
         for (int i = 1; i <= n; i++) {

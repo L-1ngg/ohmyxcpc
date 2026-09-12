@@ -1,7 +1,7 @@
 vector<int> rev;
-template<int P> vector<MInt<P>> roots{0, 1};
+template <int P> vector<MInt<P>> roots{0, 1};
 
-template<int P> constexpr MInt<P> findPrimitiveRoot() {
+template <int P> constexpr MInt<P> findPrimitiveRoot() {
     MInt<P> i = 2;
     int k = __builtin_ctz(P - 1);
     while (true) {
@@ -13,10 +13,10 @@ template<int P> constexpr MInt<P> findPrimitiveRoot() {
     return power(i, (P - 1) >> k);
 }
 
-template<int P> constexpr MInt<P> primitiveRoot = findPrimitiveRoot<P>();
-template<> constexpr MInt<998244353> primitiveRoot<998244353>{31};
+template <int P> constexpr MInt<P> primitiveRoot = findPrimitiveRoot<P>();
+template <> constexpr MInt<998244353> primitiveRoot<998244353>{31};
 
-template<int P> constexpr void dft(vector<MInt<P>> &a) {  // 离散傅里叶变换
+template <int P> constexpr void dft(vector<MInt<P>> &a) {
     int n = a.size();
 
     if (int(rev.size()) != n) {
@@ -55,7 +55,7 @@ template<int P> constexpr void dft(vector<MInt<P>> &a) {  // 离散傅里叶变�
         }
     }
 }
-template<int P> constexpr void idft(vector<MInt<P>> &a) {  // 逆变换
+template <int P> constexpr void idft(vector<MInt<P>> &a) {
     int n = a.size();
     reverse(a.begin() + 1, a.end());
     dft(a);

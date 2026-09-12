@@ -1,3 +1,4 @@
+using i64 = long long;
 struct Lagrange {
     int n;
     vector<Z> x, y, fac, invfac;
@@ -12,7 +13,7 @@ struct Lagrange {
     void init(int n) {
         iota(x.begin(), x.end(), 0);
         for (int i = 1; i <= n + 2; i++) {
-            y[i] = y[i - 1] + mypow(Z(i), n);  // 原来 Z t 未赋值再 t.power(i,n)
+            y[i] = y[i - 1] + mypow(Z(i), n);
         }
         fac[0] = 1;
         for (int i = 1; i <= n + 2; i++) {
@@ -23,7 +24,7 @@ struct Lagrange {
             invfac[i] = invfac[i + 1] * (i + 1);
         }
     }
-    Z solve(LL k) {
+    Z solve(i64 k) {
         if (k <= n + 2) {
             return y[k];
         }

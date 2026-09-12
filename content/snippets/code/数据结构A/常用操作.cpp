@@ -1,10 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long i64;
-typedef long long ll;
-typedef long long LL;
-typedef long double ld;
-typedef unsigned long long u64;
+
+using ld = long double;
+using u64 = unsigned long long;
 const int MOD = 998244353;
 const int mod = 1000000007;
 const int N = 1000005;
@@ -14,27 +12,35 @@ const double PI = acos(-1.0);
 
 struct dsu {
     std::vector<int> d;
-    dsu(int n) { d.resize(n + 1); iota(d.begin(), d.end(), 0); }
+    dsu(int n) {
+        d.resize(n + 1);
+        iota(d.begin(), d.end(), 0);
+    }
     int get_root(int x) { return d[x] = (x == d[x] ? x : get_root(d[x])); };
     bool merge(int u, int v) {
         if (get_root(u) != get_root(v)) {
             d[get_root(u)] = get_root(v);
             return true;
-        }
-        else return false;
+        } else
+            return false;
     }
 };
-//左移位数根据节点个数定
-#define UFLIMIT (2<<17)
+
+#define UFLIMIT (2 << 17)
 int unicnt[UFLIMIT];
 void ufinit(int n) {
-    for (int i = 0;i < n;i++)unicnt[i] = 1;
+    for (int i = 0; i < n; i++)
+        unicnt[i] = 1;
 }
-int ufroot(int x) { return unicnt[x] <= 0 ? -(unicnt[x] = -ufroot(-unicnt[x])) : x; }
-int ufsame(int x, int y) { return ufroot(x) == ufroot(y); }
+int ufroot(int x) {
+    return unicnt[x] <= 0 ? -(unicnt[x] = -ufroot(-unicnt[x])) : x;
+}
+int ufsame(int x, int y) {
+    return ufroot(x) == ufroot(y);
+}
 void uni(int x, int y) {
-    if ((x = ufroot(x)) == (y = ufroot(y)))return;
-    if (unicnt[x] < unicnt[y])std::swap(x, y);
+    if ((x = ufroot(x)) == (y = ufroot(y))) return;
+    if (unicnt[x] < unicnt[y]) std::swap(x, y);
     unicnt[x] += unicnt[y];
     unicnt[y] = -x;
 }
@@ -42,6 +48,7 @@ class UnionFind {
 private:
     std::vector<int> parent;
     std::vector<int> rank;
+
 public:
     UnionFind(int n) {
         parent.resize(n, 0);
@@ -49,24 +56,20 @@ public:
         iota(parent.begin(), parent.end(), 0);
     }
     int find(int x) {
-        if (parent[x] == x)
-            return x;
+        if (parent[x] == x) return x;
         return parent[x] = find(parent[x]);
     }
     void merge(int x, int y) {
         int rootX = find(x);
         int rootY = find(y);
         if (rootX == rootY) return;
-        if (rank[rootX] > rank[rootY])
-            std::swap(rootX, rootY);
+        if (rank[rootX] > rank[rootY]) std::swap(rootX, rootY);
         parent[rootX] = rootY;
         if (rank[rootX] == rank[rootY]) {
             rank[rootY]++;
         }
     }
-    bool isConnect(int x, int y) {
-        return find(x) == find(y);
-    }
+    bool isConnect(int x, int y) { return find(x) == find(y); }
 };
 
 // @book-begin
@@ -86,29 +89,23 @@ struct DSU {
         }
         return x;
     }
-    bool merge(int x, int y) { // 实际是"编号小的合并到大的上"（见下行 swap）
+    bool merge(int x, int y) {
         if (x == y) f[get(x)] = 1;
         x = get(x), y = get(y);
         e[x]++;
         if (x == y) return false;
-        if (x < y) swap(x, y); // 将编号小的合并到大的上
+        if (x < y) swap(x, y);
         fa[y] = x;
         f[x] |= f[y], p[x] += p[y], e[x] += e[y];
         return true;
     }
-    bool same(int x, int y) {
-        return get(x) == get(y);
-    }
-    bool F(int x) {  // 判断连通块内是否存在自环
-        return f[get(x)];
-    }
-    int size(int x) {  // 输出连通块中点的数量
-        return p[get(x)];
-    }
-    int E(int x) {  // 输出连通块中边的数量
-        return e[get(x)];
-    }
+    bool same(int x, int y) { return get(x) == get(y); }
+    bool F(int x) { return f[get(x)]; }
+    int size(int x) { return p[get(x)]; }
+    int E(int x) { return e[get(x)]; }
 };
 // @book-end
 
-int main() { return 0; }
+int main() {
+    return 0;
+}

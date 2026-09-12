@@ -1,10 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long i64;
-typedef long long ll;
-typedef long long LL;
-typedef long double ld;
-typedef unsigned long long u64;
+
+using ld = long double;
+using u64 = unsigned long long;
 const int MOD = 998244353;
 const int mod = 1000000007;
 const int N = 1000005;
@@ -13,7 +11,7 @@ const double eps = 1e-8;
 const double PI = acos(-1.0);
 
 // @book-begin
-template<typename T, typename Cmp = less<T>> struct RMQ {
+template <typename T, typename Cmp = less<T>> struct RMQ {
     const Cmp cmp = Cmp();
     static constexpr unsigned B = 64;
     using u64 = unsigned long long;
@@ -22,9 +20,7 @@ template<typename T, typename Cmp = less<T>> struct RMQ {
     vector<T> pre, suf, ini;
     vector<u64> stk;
     RMQ() {}
-    RMQ(const vector<T> &v) {
-        init(v);
-    }
+    RMQ(const vector<T> &v) { init(v); }
     void init(const vector<T> &v) {
         n = v.size();
         pre = suf = ini = v;
@@ -87,4 +83,6 @@ template<typename T, typename Cmp = less<T>> struct RMQ {
 };
 // @book-end
 
-int main() { return 0; }
+int main() {
+    return 0;
+}

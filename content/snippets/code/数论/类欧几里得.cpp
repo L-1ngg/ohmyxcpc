@@ -1,10 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long i64;
-typedef long long ll;
-typedef long long LL;
-typedef long double ld;
-typedef unsigned long long u64;
+
+using i64 = long long;
+using ld = long double;
+using u64 = unsigned long long;
 const int MOD = 998244353;
 const int mod = 1000000007;
 const int N = 1000005;
@@ -46,15 +45,17 @@ int exgcd(int a, int b, int &x, int &y) {
 }
 
 // @book-begin
+using i64 = long long;
 i64 euclidean(i64 a, i64 b, i64 c, i64 n) {
-    // sum{0, n}(floor((a * i + b) / c))
+
     i64 n2 = n * (n + 1) / 2;
-    if (a >= c || b >= c)
-        return euclidean(a % c, b % c, c, n) + (a / c) * n2 + (b / c) * (n + 1);
+    if (a >= c || b >= c) return euclidean(a % c, b % c, c, n) + (a / c) * n2 + (b / c) * (n + 1);
     i64 m = (a * n + b) / c;
     if (!m) return 0;
     return m * n - euclidean(c, c - b - 1, a, m - 1);
 }
 // @book-end
 
-int main() { return 0; }
+int main() {
+    return 0;
+}

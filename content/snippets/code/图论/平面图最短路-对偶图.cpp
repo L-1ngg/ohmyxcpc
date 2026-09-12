@@ -1,10 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long i64;
-typedef long long ll;
-typedef long long LL;
-typedef long double ld;
-typedef unsigned long long u64;
+
+using ld = long double;
+using u64 = unsigned long long;
 const int MOD = 998244353;
 const int mod = 1000000007;
 const int N = 1000005;
@@ -12,8 +10,8 @@ const int M = 2000005;
 const double eps = 1e-8;
 const double PI = acos(-1.0);
 
-template<class... A> int Hash(A&&...);
-template<class... A> int add(A&&...);
+template <class... A> int Hash(A &&...);
+template <class... A> int add(A &&...);
 int n;
 int net;
 int now;
@@ -33,7 +31,6 @@ int main() {
             } else {
                 add(pre, now, w);
             }
-            // flow.add(Hash(i, j), Hash(i, j + 1), w);
         }
     }
     for (int i = 1; i <= n; i++) {
@@ -47,7 +44,6 @@ int main() {
             } else {
                 add(now, net, w);
             }
-            // flow.add(Hash(i, j), Hash(i + 1, j), w);
         }
     }
     for (int i = 1; i <= n + 1; i++) {
@@ -61,7 +57,6 @@ int main() {
             } else {
                 add(now, net, w);
             }
-            // flow.add(Hash(i, j), Hash(i, j - 1), w);
         }
     }
     for (int i = 1; i <= n; i++) {
@@ -75,7 +70,6 @@ int main() {
             } else {
                 add(pre, now, w);
             }
-            // flow.add(Hash(i, j), Hash(i - 1, j), w);
         }
     }
 }

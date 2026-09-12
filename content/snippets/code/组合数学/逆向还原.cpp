@@ -1,10 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long i64;
-typedef long long ll;
-typedef long long LL;
-typedef long double ld;
-typedef unsigned long long u64;
+
+using ld = long double;
+using u64 = unsigned long long;
 const int MOD = 998244353;
 const int mod = 1000000007;
 const int N = 1000005;
@@ -15,19 +13,19 @@ const double PI = acos(-1.0);
 int f[M];
 
 // @book-begin
-string inv_kangtuo(int ans, int n) { // 原来本节误粘了正向展开
-    vector<int> used(n + 1, 0);  // 1..n 是否已用
+string inv_kangtuo(int ans, int n) {
+    vector<int> used(n + 1, 0);
     string s;
-    ans--;  // 转 0-indexed
+    ans--;
     for (int i = 0; i < n; i++) {
-        int rk = ans / f[n - i - 1]; // 剩余数字中第 rk 小（0-indexed）
+        int rk = ans / f[n - i - 1];
         ans %= f[n - i - 1];
         int cnt = 0;
         for (int j = 1; j <= n; j++) {
             if (used[j]) continue;
             if (cnt == rk) {
                 used[j] = 1;
-                s += char('0' + j);  // n>9 时改成 vector<int>
+                s += char('0' + j);
                 break;
             }
             cnt++;
@@ -37,4 +35,6 @@ string inv_kangtuo(int ans, int n) { // 原来本节误粘了正向展开
 }
 // @book-end
 
-int main() { return 0; }
+int main() {
+    return 0;
+}

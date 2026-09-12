@@ -1,10 +1,8 @@
-template<typename T> T rotatingCalipers(vector<Point<T>> &p) {
-    #define S(x, y, z) triangleAreaEx(p[x], p[y], p[z])
+template <typename T> T rotatingCalipers(vector<Point<T>> &p) {
+#define S(x, y, z) triangleAreaEx(p[x], p[y], p[z])
     int n = p.size();
     T ans = 0;
-    auto nxt = [&](int i) -> int {
-        return i == n - 1 ? 0 : i + 1;
-    };
+    auto nxt = [&](int i) -> int { return i == n - 1 ? 0 : i + 1; };
     for (int i = 0; i < n; i++) {
         int p1 = nxt(i), p2 = nxt(nxt(nxt(i)));
         for (int j = nxt(nxt(i)); nxt(j) != i; j = nxt(j)) {
@@ -21,5 +19,5 @@ template<typename T> T rotatingCalipers(vector<Point<T>> &p) {
         }
     }
     return ans;
-    #undef S
+#undef S
 }

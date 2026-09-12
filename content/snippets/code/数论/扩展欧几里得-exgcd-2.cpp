@@ -1,10 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long i64;
-typedef long long ll;
-typedef long long LL;
-typedef long double ld;
-typedef unsigned long long u64;
+
+using ld = long double;
+using u64 = unsigned long long;
 const int MOD = 998244353;
 const int mod = 1000000007;
 const int N = 1000005;
@@ -48,9 +46,8 @@ int exgcd(int a, int b, int &x, int &y) {
 // @book-begin
 int main() {
     auto calc = [&](int a, int b, int c) {
-        // A*x + B*y = C，A、B 可为负
         int u = 1, v = 1;
-        if (a < 0) {  // 负数先取绝对值，最后乘回符号
+        if (a < 0) {
             a = -a;
             u = -1;
         }
@@ -60,20 +57,20 @@ int main() {
         }
 
         int x, y, d = exgcd(a, b, x, y), ans;
-        if (c % d != 0) {  // 无整数解
+        if (c % d != 0) {
             cout << -1 << "\n";
             return;
         }
         a /= d, b /= d, c /= d;
-        x *= c, y *= c;  // 得到一组可行解
+        x *= c, y *= c;
 
-        ans = (x % b + b - 1) % b + 1; // x 的最小正整数解
+        ans = (x % b + b - 1) % b + 1;
         auto [A, B] = pair{u * ans, v * (c - ans * a) / b};
 
-        ans = (y % a + a - 1) % a + 1; // y 的最小正整数解
+        ans = (y % a + a - 1) % a + 1;
         auto [C, D] = pair{u * (c - ans * b) / a, v * ans};
 
-        int num = (C - A) / b + 1;  // x、y 均为正整数的解组数
+        int num = (C - A) / b + 1;
     };
 }
 // @book-end

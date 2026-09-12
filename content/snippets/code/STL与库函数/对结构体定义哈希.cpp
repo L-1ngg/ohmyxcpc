@@ -1,10 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long i64;
-typedef long long ll;
-typedef long long LL;
-typedef long double ld;
-typedef unsigned long long u64;
+
+using ld = long double;
+using u64 = unsigned long long;
 const int MOD = 998244353;
 const int mod = 1000000007;
 const int N = 1000005;
@@ -16,8 +14,8 @@ const double PI = acos(-1.0);
 struct fff {
     string x, y;
     int z;
-    friend bool operator == (const fff &a, const fff &b) {
-        return a.x == b.x && a.y == b.y && a.z == b.z;  // 必须全部相等才相等，注意是 && 不是 ||
+    friend bool operator==(const fff &a, const fff &b) {
+        return a.x == b.x && a.y == b.y && a.z == b.z;
     }
 };
 struct hash_fff {
@@ -28,4 +26,6 @@ struct hash_fff {
 unordered_map<fff, int, hash_fff> mp;
 // @book-end
 
-int main() { return 0; }
+int main() {
+    return 0;
+}

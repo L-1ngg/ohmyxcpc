@@ -5,7 +5,9 @@ order: 90
 
 # 取整函数 {#s-7af3aa2f8cd9}
 
-  对于实数 $x$，定义 **下取整函数**（floor function）和 **上取整函数**（ceiling function）分别为
+取整函数把实数映射到相邻整数，用于计数与整除分块。负数时下取整、上取整与 C++ 向零截断的除法不同。
+
+对于实数 $x$，定义 **下取整函数**（floor function）和 **上取整函数**（ceiling function）分别为
 
 $$
 \lfloor x \rfloor = \text{max} \{ k \in \mathbf{Z} : k \le x \} , \quad \lceil x \rceil = \text{min} \{ k \in \mathbf{Z} : k \ge x \} .

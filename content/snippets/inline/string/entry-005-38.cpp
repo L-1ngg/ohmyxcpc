@@ -24,16 +24,14 @@ struct String {
             hash2.push_back(hash2.back() * base2 + it);
         }
     }
-    pair<U, V> get() {  // 输出整串的哈希值
-        return {hash1.back(), hash2.back()};
-    }
-    pair<U, V> substring(int l, int r) { // 输出子串的哈希值
+    pair<U, V> get() { return {hash1.back(), hash2.back()}; }
+    pair<U, V> substring(int l, int r) {
         if (l > r) swap(l, r);
         U ans1 = hash1[r + 1] - hash1[l] * val1[r - l + 1];
         V ans2 = hash2[r + 1] - hash2[l] * val2[r - l + 1];
         return {ans1, ans2};
     }
-    pair<U, V> modify(int idx, char x) { // 修改 idx 位为 x
+    pair<U, V> modify(int idx, char x) {
         int n = s.size() - 1;
         U ans1 = hash1.back() + val1[n - idx] * (x - s[idx]);
         V ans2 = hash2.back() + val2[n - idx] * (x - s[idx]);

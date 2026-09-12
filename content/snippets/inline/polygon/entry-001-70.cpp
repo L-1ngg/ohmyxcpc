@@ -1,6 +1,5 @@
-template<typename T>
-bool segmentInPolygon(Line<T> l, vector<Point<T>> p) {
-// 线段与多边形边界不相交且两端点都在多边形内部
+template <typename T> bool segmentInPolygon(Line<T> l, vector<Point<T>> p) {
+
 #define L(x, y) pointOnLineLeft(x, y)
     int n = p.size();
     if (!pointInPolygon(l.a, p)) return false;

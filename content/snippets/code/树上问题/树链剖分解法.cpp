@@ -1,10 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long i64;
-typedef long long ll;
-typedef long long LL;
-typedef long double ld;
-typedef unsigned long long u64;
+
+using ld = long double;
+using u64 = unsigned long long;
 const int MOD = 998244353;
 const int mod = 1000000007;
 const int N = 1000005;
@@ -23,8 +21,8 @@ struct Tree {
         ver[x].push_back(y);
         ver[y].push_back(x);
     }
-    int getlen(int root) { // 获取x所在树的直径
-        map<int, int> dep; // map用于优化输入为森林时的深度计算，亦可用vector
+    int getlen(int root) {
+        map<int, int> dep;
         function<void(int, int)> dfs = [&](int x, int fa) -> void {
             for (auto y : ver[x]) {
                 if (y == fa) continue;
@@ -36,11 +34,11 @@ struct Tree {
             }
         };
         dfs(root, 0);
-        int st = root; // 记录直径端点
+        int st = root;
 
         dep.clear();
         dfs(root, 0);
-        int ed = root; // 记录直径另一端点
+        int ed = root;
 
         return dep[root];
     }
@@ -63,7 +61,7 @@ struct HLD {
         son.resize(n + 1);
         parent.resize(n + 1);
     }
-    void add(int x, int y) { // 建立双向边
+    void add(int x, int y) {
         ver[x].push_back(y);
         ver[y].push_back(x);
     }
@@ -98,14 +96,14 @@ struct HLD {
         }
         return dep[x] < dep[y] ? x : y;
     }
-    int clac(int x, int y) { // 查询两点间距离
-        return dep[x] + dep[y] - 2 * dep[lca(x, y)];
-    }
-    void work(int root = 1) {  // 在此初始化
+    int clac(int x, int y) { return dep[x] + dep[y] - 2 * dep[lca(x, y)]; }
+    void work(int root = 1) {
         dfs1(root);
         dfs2(root, root);
     }
 };
 // @book-end
 
-int main() { return 0; }
+int main() {
+    return 0;
+}

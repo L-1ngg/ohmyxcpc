@@ -5,17 +5,17 @@ order: 220
 
 # 试除法判是否是质数 {#s-ad05d835a0e7}
 
-  试到 $\sqrt{n}$ 即可：有因数则必有一个 $\le \sqrt{n}$。$n < 2$ 不是质数。大批量改用筛。
+试到 $\sqrt{n}$ 即可：有因数则必有一个 $\le \sqrt{n}$。$n < 2$ 不是质数。大批量改用筛。
 
 ## 标准解 {#s-9be8daadc130}
 
-  $\mathcal{O} ( \sqrt{N} )$。循环写 `i <= n / i` 防溢出。
+$\mathcal{O} ( \sqrt{N} )$。循环写 `i <= n / i` 防溢出。
 
 <<< @/snippets/code/数论/标准解.cpp
 
 ## 常数优化法 {#s-a192c2afa9ac}
 
-  常数优化，达到 $\mathcal{O} ( \frac{\sqrt{N}}{3} )$ 。
+常数优化，达到 $\mathcal{O} ( \frac{\sqrt{N}}{3} )$ 。
 
 ```cpp
 bool is_prime(int n) {

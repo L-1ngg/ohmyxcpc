@@ -1,4 +1,4 @@
-template<typename T> vector<Point<T>> mincowski(vector<Point<T>> P1, vector<Point<T>> P2) {
+template <typename T> vector<Point<T>> mincowski(vector<Point<T>> P1, vector<Point<T>> P2) {
     int n = P1.size(), m = P2.size();
     vector<Point<T>> V1(n), V2(m);
     for (int i = 0; i < n; i++) {
@@ -13,7 +13,9 @@ template<typename T> vector<Point<T>> mincowski(vector<Point<T>> P1, vector<Poin
         Point<T> val = sign(cross(V1[i], V2[j])) > 0 ? V1[i++] : V2[j++];
         ans.push_back(ans.back() + val);
     }
-    while (i < n) ans.push_back(ans.back() + V1[i++]);
-    while (j < m) ans.push_back(ans.back() + V2[j++]);
+    while (i < n)
+        ans.push_back(ans.back() + V1[i++]);
+    while (j < m)
+        ans.push_back(ans.back() + V2[j++]);
     return ans;
 }

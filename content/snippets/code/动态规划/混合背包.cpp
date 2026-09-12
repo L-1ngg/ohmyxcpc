@@ -1,10 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long i64;
-typedef long long ll;
-typedef long long LL;
-typedef long double ld;
-typedef unsigned long long u64;
+
+using ld = long double;
+using u64 = unsigned long long;
 const int MOD = 998244353;
 const int mod = 1000000007;
 const int N = 1000005;
@@ -16,23 +14,21 @@ const double PI = acos(-1.0);
 #include <bits/stdc++.h>
 using namespace std;
 int n, W, w, v, s;
-int main(){
+int main() {
     cin >> n >> W;
-    vector <int> f(W + 1);
-    for (int i = 0; i < n; i ++ ){
+    vector<int> f(W + 1);
+    for (int i = 0; i < n; i++) {
         cin >> w >> v >> s;
-        if (s == -1){
-            for (int j = W; j >= w; j -- )
+        if (s == -1) {
+            for (int j = W; j >= w; j--)
                 f[j] = max(f[j], f[j - w] + v);
-        }
-        else if (s == 0){
-            for (int j = w; j <= W; j ++ )
+        } else if (s == 0) {
+            for (int j = w; j <= W; j++)
                 f[j] = max(f[j], f[j - w] + v);
-        }
-        else {
+        } else {
             int t = 1, cnt = 0;
-            vector <int> x(s + 1), y(s + 1);
-            while (s >= t){
+            vector<int> x(s + 1), y(s + 1);
+            while (s >= t) {
                 x[++cnt] = w * t;
                 y[cnt] = v * t;
                 s -= t;
@@ -40,8 +36,8 @@ int main(){
             }
             x[++cnt] = w * s;
             y[cnt] = v * s;
-            for (int i = 1; i <= cnt; i ++ )
-                for (int j = W; j >= x[i]; j -- )
+            for (int i = 1; i <= cnt; i++)
+                for (int j = W; j >= x[i]; j--)
                     f[j] = max(f[j], f[j - x[i]] + y[i]);
         }
     }

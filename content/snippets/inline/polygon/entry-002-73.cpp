@@ -1,15 +1,11 @@
-template<typename T> bool turnRight(Pt a, Pt b) {
+template <typename T> bool turnRight(Pt a, Pt b) {
     return cross(a, b) < 0 || (cross(a, b) == 0 && dot(a, b) < 0);
 }
 struct Line {
     static int cmp;
     mutable Point<int> a, b;
-    friend bool operator<(Line x, Line y) {
-        return cmp ? x.a < y.a : turnRight(x.b, y.b);
-    }
-    friend auto &operator<<(ostream &os, Line l) {
-        return os << "<" << l.a << ", " << l.b << ">";
-    }
+    friend bool operator<(Line x, Line y) { return cmp ? x.a < y.a : turnRight(x.b, y.b); }
+    friend auto &operator<<(ostream &os, Line l) { return os << "<" << l.a << ", " << l.b << ">"; }
 };
 
 int Line::cmp = 1;
@@ -47,9 +43,7 @@ struct UpperConvexHull : set<Line> {
 };
 struct ConvexHull {
     UpperConvexHull up, low;
-    bool empty() const {
-        return up.empty();
-    }
+    bool empty() const { return up.empty(); }
     bool contains(const Point<int> &p) const {
         Line::cmp = 1;
         return up.contains(p) && low.contains(-p);
@@ -70,9 +64,11 @@ struct ConvexHull {
         return sign(A * P.x + B * P.y - C) * sign(A * Q.x + B * Q.y - C) > 0;
     }
     friend ostream &operator<<(ostream &out, const ConvexHull &ch) {
-        for (const auto &line : ch.up) out << "(" << line.a.x << "," << line.a.y << ")";
+        for (const auto &line : ch.up)
+            out << "(" << line.a.x << "," << line.a.y << ")";
         cout << "/";
-        for (const auto &line : ch.low) out << "(" << -line.a.x << "," << -line.a.y << ")";
+        for (const auto &line : ch.low)
+            out << "(" << -line.a.x << "," << -line.a.y << ")";
         return out;
     }
 };

@@ -5,23 +5,23 @@ order: 340
 
 # 常见结论和定理 {#s-bcaee764bba7}
 
-  构造与存在性的速查，不是算法。用前确认条件（互质、奇偶、上下界）。
+构造与存在性的速查，不是算法。用前确认条件（互质、奇偶、上下界）。
 
 ## 麦乐鸡定理 {#s-a5b6f80b120e}
 
-  给定两个互质的数 $n , m$ ，定义 $x = a * n + b * m ( a \ge 0 , b \ge 0 )$，当 $x > n * m - n - m$ 时，该式子恒成立。
+给定两个互质的数 $n , m$ ，定义 $x = a * n + b * m ( a \ge 0 , b \ge 0 )$，当 $x > n * m - n - m$ 时，该式子恒成立。
 
 ## 抽屉原理（鸽巢原理） {#s-bf4e56f0352f}
 
-  将 $n + 1$ 个物体，划分为 $n$ 组，那么有至少一组有两个（或以上）的物体。
+将 $n + 1$ 个物体，划分为 $n$ 组，那么有至少一组有两个（或以上）的物体。
 
 ## 哥德巴赫猜想 {#s-1bef2795e6cf}
 
-  任何一个大于 $5$ 的整数都可写成三个质数之和；任何一个大于 $2$ 的偶数都可写成两个素数之和。
+任何一个大于 $5$ 的整数都可写成三个质数之和；任何一个大于 $2$ 的偶数都可写成两个素数之和。
 
 ## 除法、取模运算的本质 {#s-66ac3c0ba58e}
 
-  有公式：$x \div i = \lfloor \frac{x}{i} \rfloor + x - i \cdot \lfloor \frac{x}{i} \rfloor$ ，$x \operatorname{mod} \quad i = x - i \cdot \lfloor \frac{x}{i} \rfloor$ 。
+有公式：$x \div i = \lfloor \frac{x}{i} \rfloor + x - i \cdot \lfloor \frac{x}{i} \rfloor$ ，$x \operatorname{mod} \quad i = x - i \cdot \lfloor \frac{x}{i} \rfloor$ 。
 
 ## 与、或、异或 {#s-084e9e2a3bc1}
 
@@ -37,7 +37,7 @@ order: 340
 
 ## 调和级数近似公式 {#s-ee3ec35bbd4d}
 
-  $H_{n} \approx \text{ln} n + \gamma + 1 / ( 2 n )$，$\gamma \approx 0.5772156649$。估 $\sum \lfloor n / i \rfloor$ 的量级。
+$H_{n} \approx \text{ln} n + \gamma + 1 / ( 2 n )$，$\gamma \approx 0.5772156649$。估 $\sum \lfloor n / i \rfloor$ 的量级。
 
 ```cpp
 log(n) + 0.5772156649 + 1.0 / (2 * n)
@@ -53,26 +53,26 @@ log(n) + 0.5772156649 + 1.0 / (2 * n)
 
 - 若 $p$ 为质数，且满足 $p \mid n$ ，
 
-   
+
    - $p^{2} \mid n$ ，那么 $\varphi ( n ) = \varphi ( n / p ) * p$ 。
 
    - $p^{2} \nmid n$，那么 $\varphi ( n ) = \varphi ( n / p ) * ( p - 1 )$ 。
 
 - $\sum_{d \mid n} \varphi ( d ) = n$ 。
 
-   
 
-   > 如 $n = 10$ ，则 $d = 10 / 5 / 2 / 1$ ，那么 $10 = \varphi ( 10 ) + \varphi ( 5 ) + \varphi ( 2 ) + \varphi ( 1 )$ 。
+
+> 如 $n = 10$ ，则 $d = 10 / 5 / 2 / 1$ ，那么 $10 = \varphi ( 10 ) + \varphi ( 5 ) + \varphi ( 2 ) + \varphi ( 1 )$ 。
 
 - $\sum_{i = 1}^{n} \text{gcd} ( i , n ) = \sum_{d \vert n} \lfloor \frac{n}{d} \rfloor \varphi ( d )$ （欧拉反演）。
 
 ## 狄利克雷卷积 {#s-4aa2e6b0ec00}
 
-  $\sum_{d \vert n} \varphi ( d ) = n$ ，$\sum_{d \vert n} \mu ( d ) \frac{n}{d} = \varphi ( n )$ 。
+$\sum_{d \vert n} \varphi ( d ) = n$ ，$\sum_{d \vert n} \mu ( d ) \frac{n}{d} = \varphi ( n )$ 。
 
 ## 斐波那契数列 {#s-ae358a9065d4}
 
-  通项公式：$F_{n} = \frac{1}{\sqrt{5}} * [ ( \frac{1 + \sqrt{5}}{2} )^{n} - ( \frac{1 - \sqrt{5}}{2} )^{n} ]$ 。
+通项公式：$F_{n} = \frac{1}{\sqrt{5}} * [ ( \frac{1 + \sqrt{5}}{2} )^{n} - ( \frac{1 - \sqrt{5}}{2} )^{n} ]$ 。
 
 直接结论：
 
@@ -120,7 +120,7 @@ log(n) + 0.5772156649 + 1.0 / (2 * n)
 
 - 辗转相除法原式为 $\text{gcd} ( x , y ) = \text{gcd} ( x , y - x )$ ，推广到 $N$ 项为 $\text{gcd} ( a_{1} , a_{2} , \ldots , a_{N} ) = \text{gcd} ( a_{1} , a_{2} - a_{1} , \ldots , a_{N} - a_{N - 1} )$ ，
 
-   
+
    - 该推论在“四则运算后 $\text{gcd}$ ”这类题中有特殊意义，如求解 $\text{gcd} ( a_{1} + X , a_{2} + X , \ldots , a_{N} + X )$ 时[See](https://codeforces.com/problemset/problem/1458/A)；
 
 - 以下式子成立： $\text{gcd} ( a , m ) = \text{gcd} ( a + x , m ) \Leftrightarrow \text{gcd} ( a , m ) = \text{gcd} ( x , m )$ 。求解上式满足条件的 $x$ 的数量即为求比 $\frac{m}{\text{gcd} ( a , m )}$ 小且与其互质的数的个数，即用欧拉函数求解 $\varphi ( \frac{m}{\text{gcd} ( a , m )} )$ 。
@@ -135,7 +135,7 @@ log(n) + 0.5772156649 + 1.0 / (2 * n)
 
 - 令 $\begin{cases} X = a + b \\ Y = a \oplus b\end{cases}$ ，**如果**该式子**有解**，那么存在前提条件 $\begin{cases} X \ge Y \\ X , Y \mathrm{\text{同奇偶}}\end{cases}$ ；进一步，此时最小的 $a$ 的取值为 $\frac{X - Y}{2}$ [See](https://codeforces.com/problemset/problem/76/D)。
 
-   然而，上方方程并不总是有解的，只有当变量增加到三个时，才**一定有解**，即：**在保证上方前提条件成立的情况下**，求解 $\begin{cases} X = a + b + c \\ Y = a \oplus b \oplus c\end{cases}$ ，则一定存在一组解 $\{ \frac{X - Y}{2} , \frac{X - Y}{2} , Y \}$ [See](https://codeforces.com/problemset/problem/1325/D)。
+然而，上方方程并不总是有解的，只有当变量增加到三个时，才**一定有解**，即：**在保证上方前提条件成立的情况下**，求解 $\begin{cases} X = a + b + c \\ Y = a \oplus b \oplus c\end{cases}$ ，则一定存在一组解 $\{ \frac{X - Y}{2} , \frac{X - Y}{2} , Y \}$ [See](https://codeforces.com/problemset/problem/1325/D)。
 
 - 已知序列 $p$ 是由序列 $a_{1}$ 、序列 $a_{2}$ 、……、序列 $a_{n}$ 合并而成，且合并过程中各序列内元素相对顺序不变，记 $T ( p )$ 是 $p$ 序列的最大前缀和，则 $T ( p ) = \sum_{i = 1}^{n} T ( a_{i} )$ [See](https://codeforces.com/problemset/problem/1469/B) 。
 

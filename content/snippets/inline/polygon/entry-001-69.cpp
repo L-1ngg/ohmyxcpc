@@ -1,4 +1,4 @@
-template<typename T> int pointInPolygon(Point<T> a, vector<Point<T>> p) {
+template <typename T> int pointInPolygon(Point<T> a, vector<Point<T>> p) {
     int n = p.size();
     for (int i = 0; i < n; i++) {
         if (pointOnSegment(a, Line{p[i], p[(i + 1) % n]})) {

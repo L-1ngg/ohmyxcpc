@@ -5,13 +5,15 @@ order: 30
 
 # 数字转字符串函数 {#s-d90ac124e8fe}
 
-  `itoa` 虽然能将整数转换成任意进制的字符串，但是其不是标准的 C 函数，且为 Windows 独有，且不支持 `long long` ，建议手写。
+把数值转换为字符串。十进制使用标准 `to_string`；任意进制可手写短除法。`itoa` 等接口不是标准 C++，下方给出手写进制转换示例。
+
+**示例：** `to_string(val)` 将数值转为十进制字符串；浮点输出格式由该接口规定，不等同于任意精度的格式化。
 
 ```cpp
-// to_string函数会直接将你的各种类型的数字转换为字符串。
-// string to_string(T val);
 double val = 12.12;
 cout << to_string(val);
 ```
+
+**示例：** 下方手写版本将十进制 `12` 转为二进制字符串，输出 `1100`；`itoa` / `ltoa` / `ultoa` 不属于标准 C++ 接口。
 
 <<< @/snippets/code/STL与库函数/数字转字符串函数.cpp

@@ -1,10 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long i64;
-typedef long long ll;
-typedef long long LL;
-typedef long double ld;
-typedef unsigned long long u64;
+
+using i64 = long long;
+using ld = long double;
+using u64 = unsigned long long;
 const int MOD = 998244353;
 const int mod = 1000000007;
 const int N = 1000005;
@@ -45,23 +44,23 @@ int exgcd(int a, int b, int &x, int &y) {
     return d;
 }
 i64 euclidean(i64 a, i64 b, i64 c, i64 n) {
-    // sum{0, n}(floor((a * i + b) / c))
+
     i64 n2 = n * (n + 1) / 2;
-    if (a >= c || b >= c)
-        return euclidean(a % c, b % c, c, n) + (a / c) * n2 + (b / c) * (n + 1);
+    if (a >= c || b >= c) return euclidean(a % c, b % c, c, n) + (a / c) * n2 + (b / c) * (n + 1);
     i64 m = (a * n + b) / c;
     if (!m) return 0;
     return m * n - euclidean(c, c - b - 1, a, m - 1);
 }
-int phi(int n) {  //求解 phi(n)
+int phi(int n) {
     int ans = n;
-    for(int i = 2; i <= n / i; i ++) { //注意，这里要写 n / i ，以防止 int 型溢出风险和 sqrt 超时风险
-        if(n % i == 0) {
+    for (int i = 2; i <= n / i; i++) {
+        if (n % i == 0) {
             ans = ans / i * (i - 1);
-            while(n % i == 0) n /= i;
+            while (n % i == 0)
+                n /= i;
         }
     }
-    if(n > 1) ans = ans / n * (n - 1); //特判 n 为质数的情况
+    if (n > 1) ans = ans / n * (n - 1);
     return ans;
 }
 bool is_prime(int n) {
@@ -72,22 +71,28 @@ bool is_prime(int n) {
     return true;
 }
 i64 xor_n(i64 n) {
-    if (n % 4 == 1) return 1;
-    else if (n % 4 == 2) return n + 1;
-    else if (n % 4 == 3) return 0;
-    else return n;
+    if (n % 4 == 1)
+        return 1;
+    else if (n % 4 == 2)
+        return n + 1;
+    else if (n % 4 == 3)
+        return 0;
+    else
+        return n;
 }
 
-template<class... A> int q_pow(A&&...);
+template <class... A> int q_pow(A &&...);
 
 // @book-begin
+using i64 = long long;
 const int SIZE = 2;
 struct Matrix {
-    ll M[SIZE + 5][SIZE + 5];
+    i64 M[SIZE + 5][SIZE + 5];
     void clear() { memset(M, 0, sizeof(M)); }
-    void reset() {  //初始化
+    void reset() {
         clear();
-        for (int i = 1; i <= SIZE; ++i) M[i][i] = 1;
+        for (int i = 1; i <= SIZE; ++i)
+            M[i][i] = 1;
     }
     Matrix friend operator*(const Matrix &A, const Matrix &B) {
         Matrix Ans;
@@ -108,17 +113,18 @@ struct Matrix {
     }
 };
 
-inline int mypow(LL n, LL k, int p = MOD) {
-    LL r = 1;
+inline int mypow(i64 n, i64 k, int p = MOD) {
+    i64 r = 1;
     for (; k; k >>= 1, n = n * n % p) {
         if (k & 1) r = r * n % p;
     }
     return r;
 }
 bool ok = 1;
-Matrix getinv(Matrix a) {  //矩阵求逆
+Matrix getinv(Matrix a) {
     int n = SIZE, m = SIZE * 2;
-    for (int i = 1; i <= n; i++) a.M[i][i + n] = 1;
+    for (int i = 1; i <= n; i++)
+        a.M[i][i + n] = 1;
     for (int i = 1; i <= n; i++) {
         int pos = i;
         for (int j = i + 1; j <= n; j++)
@@ -128,14 +134,15 @@ Matrix getinv(Matrix a) {  //矩阵求逆
             puts("No Solution");
             ok = 0;
         }
-        ll inv = q_pow(a.M[i][i], mod - 2);
+        i64 inv = q_pow(a.M[i][i], mod - 2);
         for (int j = 1; j <= n; j++)
             if (j != i) {
-                ll mul = a.M[j][i] * inv % mod;
+                i64 mul = a.M[j][i] * inv % mod;
                 for (int k = i; k <= m; k++)
                     a.M[j][k] = ((a.M[j][k] - a.M[i][k] * mul) % mod + mod) % mod;
             }
-        for (int j = 1; j <= m; j++) a.M[i][j] = a.M[i][j] * inv % mod;
+        for (int j = 1; j <= m; j++)
+            a.M[i][j] = a.M[i][j] * inv % mod;
     }
     Matrix res;
     res.clear();
@@ -146,4 +153,6 @@ Matrix getinv(Matrix a) {  //矩阵求逆
 }
 // @book-end
 
-int main() { return 0; }
+int main() {
+    return 0;
+}

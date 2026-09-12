@@ -5,6 +5,6 @@ order: 180
 
 # 离散对数 bsgs 与 exbsgs {#s-b71c48ad77d4}
 
-  以 $\mathcal{O} ( \sqrt{P} )$ 的复杂度求解 $a^{x} \equiv b ( \operatorname{mod} P )$ 。其中标准 BSGS 算法不能计算 $a$ 与 $\text{MOD}$ 互质的情况，而 exbsgs 则可以。
+求最小非负整数 $x$，使 $a^x\equiv b\pmod P$。标准 BSGS 要求 $\gcd(a,P)=1$；exBSGS 先消去公共因子以处理不互质情况。典型时间和空间为 $O(\sqrt P)$，具体时间还取决于查找容器与模乘实现。
 
 <<< @/snippets/code/数论/离散对数-bsgs-与-exbsgs.cpp

@@ -10,11 +10,11 @@ struct Tree {
         Max.resize(n + 1, vector<int>(30));
         lg.resize(n + 1);
         dep.resize(n + 1);
-        for (int i = 1; i <= n; i++) {  //预处理 log
+        for (int i = 1; i <= n; i++) {
             lg[i] = lg[i - 1] + (1 << lg[i - 1] == i);
         }
     }
-    void add(int x, int y, int w) {  // 建立双向边
+    void add(int x, int y, int w) {
         ver[x].push_back({y, w});
         ver[y].push_back({x, w});
     }
@@ -44,10 +44,8 @@ struct Tree {
         }
         return val[x][0];
     }
-    int clac(int x, int y) {  // 倍增查询两点间距离
-        return dep[x] + dep[y] - 2 * dep[lca(x, y)];
-    }
-    int query(int x, int y) { // 倍增查询两点路径上的最大边权（带权图）
+    int clac(int x, int y) { return dep[x] + dep[y] - 2 * dep[lca(x, y)]; }
+    int query(int x, int y) {
         auto get = [&](int x, int y) -> int {
             int ans = 0;
             if (x == y) return ans;
@@ -63,7 +61,5 @@ struct Tree {
         int fa = lca(x, y);
         return max(get(x, fa), get(y, fa));
     }
-    void work(int root = 1) { // 在此初始化
-        dfs(root, 0);
-    }
+    void work(int root = 1) { dfs(root, 0); }
 };

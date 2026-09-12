@@ -8,9 +8,7 @@ struct SCC {
         col.resize(n + 1, -1);
         now = cnt = 0;
     }
-    void add(int x, int y) {
-        ver[x].push_back(y);
-    }
+    void add(int x, int y) { ver[x].push_back(y); }
     void tarjan(int x) {
         dfn[x] = low[x] = now++;
         S.push_back(x);
@@ -32,14 +30,14 @@ struct SCC {
             } while (pre != x);
         }
     }
-    auto work() {  // [cnt 新图的顶点数量]
-        for (int i = 1; i <= n; i++) {  // 避免图不连通
+    auto work() {
+        for (int i = 1; i <= n; i++) {
             if (dfn[i] == -1) {
                 tarjan(i);
             }
         }
 
-        vector<int> siz(cnt + 1);  // siz 每个 scc 中点的数量
+        vector<int> siz(cnt + 1);
         vector<vector<int>> adj(cnt + 1);
         for (int i = 1; i <= n; i++) {
             siz[col[i]]++;

@@ -1,10 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long i64;
-typedef long long ll;
-typedef long long LL;
-typedef long double ld;
-typedef unsigned long long u64;
+
+using ld = long double;
+using u64 = unsigned long long;
 const int MOD = 998244353;
 const int mod = 1000000007;
 const int N = 1000005;
@@ -17,16 +15,17 @@ int ql;
 int qr;
 
 // @book-begin
-int cal(auto x) {  // todo: 以 mid = x 为判定标准，计算当前区间内"答案落在右儿子"的询问数
+int cal(auto x) {
     return 0;
 }
 
 void solve(int ql, int qr, int l, int r) {
-    // 回答第 ql..qr 个询问，此时其答案都在值域 [l, r] 内
-    if (ql > qr)return;
-    if (l > r)return;
+
+    if (ql > qr) return;
+    if (l > r) return;
     if (l == r) {
-        for (int q = ql;q <= qr;++q)ans[q] = l;
+        for (int q = ql; q <= qr; ++q)
+            ans[q] = l;
         return;
     }
     int mid = l + r + 1 >> 1;
@@ -36,11 +35,11 @@ void solve(int ql, int qr, int l, int r) {
 }
 
 void solve() {
-    // input
-    // TODO: 原骨架此处为 solve(ql, qr, 0, n, zf)，实参/形参数目不符，重构边界后需自行核对
+
     solve(ql, qr, 0, n);
-    // todo
 }
 // @book-end
 
-int main() { return 0; }
+int main() {
+    return 0;
+}

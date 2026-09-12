@@ -18,7 +18,9 @@ struct myhash {
         return hash(x.first + SEED) ^ (hash(x.second + SEED) >> 1);
     }
 };
-// unordered_map<int, int, myhash>
+
 // @book-end
 
-int main() { return 0; }
+int main() {
+    return 0;
+}

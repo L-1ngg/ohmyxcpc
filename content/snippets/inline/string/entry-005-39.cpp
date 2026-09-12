@@ -1,4 +1,4 @@
-string compress(vector<string> in) {  // 前后缀压缩
+string compress(vector<string> in) {
     vector<U> hash1{1};
     vector<V> hash2{1};
     string ans = "#";

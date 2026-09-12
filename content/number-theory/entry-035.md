@@ -5,7 +5,9 @@ order: 350
 
 # 常见例题 {#s-ce343341d7ef}
 
-  题意：将 $1$ 至 $N$ 的每个数字分组，使得每一组的数字之和均为质数。输出每一个数字所在的组别，且要求分出的组数最少 [See](https://codeforces.com/contest/45/problem/G) 。
+数论建模例题合集。每个结论先对应题目的取值范围、奇偶性和构造要求，再选择筛法或枚举方式。
+
+题意：将 $1$ 至 $N$ 的每个数字分组，使得每一组的数字之和均为质数。输出每一个数字所在的组别，且要求分出的组数最少 [See](https://codeforces.com/contest/45/problem/G) 。
 
 考察哥德巴赫猜想，记全部数字之和为 $S$ ，分类讨论如下：
 
@@ -46,9 +48,9 @@ order: 350
 答案为 $\sum_{i = 0}^{n} - 1^{i} \cdot \binom{n}{i} \cdot \binom{m - i \cdot k + n - 1}{n - 1}$ [See1](http://acm.hdu.edu.cn/showproblem.php?pid=6397) [See2](https://codeforces.com/gym/103428/problem/M)。
 
 ```cpp
- Z clac(int n, int k, int m) {
+Z clac(int n, int k, int m) {
     Z ans = 0;
-    for(int i = 0; i <= n; ++i) {
+    for (int i = 0; i <= n; ++i) {
         ans += C(n, i) * C(m - i * k + n - 1, n - 1) * pow(-1, i);
     }
     return ans;

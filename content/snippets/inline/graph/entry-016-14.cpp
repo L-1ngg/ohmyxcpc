@@ -2,7 +2,7 @@ signed main() {
     int n, m;
     cin >> n >> m;
 
-    DSU dsu(n);  // 这里引入DSU判断图是否联通，如题目有保证，则不需要此步骤
+    DSU dsu(n);
     vector<vector<int>> edge(n + 1, vector<int>(n + 1));
     for (int i = 1; i <= m; i++) {
         int x, y, w;
@@ -12,15 +12,14 @@ signed main() {
         edge[y][x] += w;
     }
 
-    // 图不联通：Poi(x) 应为 x 所在连通块大小，本库 DSU 无此接口，需自行补充，或题目保证连通时整段删除
     if (dsu.Poi(1) != n || m < n - 1) {
         cout << 0 << endl;
         return 0;
     }
 
-    int MinCut = INF, S = 1, T = 1;  // 虚拟源汇点
+    int MinCut = INF, S = 1, T = 1;
     vector<int> bin(n + 1);
-    auto contract = [&]() -> int {  // 求解S到T的最小割，定义为 cut of phase
+    auto contract = [&]() -> int {
         vector<int> dis(n + 1), vis(n + 1);
         int Min = 0;
         for (int i = 1; i <= n; i++) {
@@ -42,7 +41,7 @@ signed main() {
         }
         return Min;
     };
-    for (int i = 1; i < n; i++) {  // 这里取不到等号
+    for (int i = 1; i < n; i++) {
         int val = contract();
         bin[T] = 1;
         MinCut = min(MinCut, val);

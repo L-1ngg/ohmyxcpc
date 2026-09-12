@@ -5,7 +5,7 @@ order: 50
 
 # 常用结论 {#s-3d9fd866e2bb}
 
-  体积、夹角、距离的公式速查。混积绝对值是平行六面体体积。
+体积、夹角、距离的公式速查。混积绝对值是平行六面体体积。
 
 ## 平面几何结论归档 {#s-dbd255628e76}
 
@@ -17,9 +17,9 @@ order: 50
 
 - 由小正三角形拼成的大正三角形，耗费的小三角形数量即为构成一条边的小三角形数量的平方。如下图，总数量即为 $4^{2}$ [See](https://codeforces.com/problemset/problem/559/A)。
 
-   
 
-   ![img-02.png](/images/img-02.png)
+
+![img-02.png](/images/img-02.png)
 
 - 正 $n$ 边形圆心角为 $\frac{360^{\circ}}{n}$ ，圆周角为 $\frac{180^{\circ}}{n}$ 。定义正 $n$ 边形上的三个顶点 $A , B$ 和 $C$（可以不相邻），使得 $\angle A B C = \theta$ ，当 $n \le 360$ 时，$\theta$ 可以取 $1^{\circ}$ 到 $179^{\circ}$ 间的任何一个整数 [See](https://codeforces.com/problemset/problem/1096/C)。
 

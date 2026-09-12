@@ -1,10 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long i64;
-typedef long long ll;
-typedef long long LL;
-typedef long double ld;
-typedef unsigned long long u64;
+
+using ld = long double;
+using u64 = unsigned long long;
 const int MOD = 998244353;
 const int mod = 1000000007;
 const int N = 1000005;
@@ -12,7 +10,7 @@ const int M = 2000005;
 const double eps = 1e-8;
 const double PI = acos(-1.0);
 
-template<typename T> struct Flow_ {
+template <typename T> struct Flow_ {
     const int n;
     const T inf = numeric_limits<T>::max();
     struct Edge {
@@ -77,7 +75,7 @@ template<typename T> struct Flow_ {
     }
 };
 using Flow = Flow_<int>;
-template<typename T> struct PushRelabel {
+template <typename T> struct PushRelabel {
     const int inf = 0x3f3f3f3f;
     const T INF = 0x3f3f3f3f3f3f3f3f;
     struct Edge {
@@ -86,7 +84,7 @@ template<typename T> struct PushRelabel {
     };
     vector<vector<Edge>> e;
     vector<vector<int>> gap;
-    vector<T> ex;  // 超额流
+    vector<T> ex;
     vector<bool> ingap;
     vector<int> h;
     int n, gobalcnt, maxH = 0;
@@ -196,7 +194,7 @@ signed main() {
     cin >> n >> m;
 
     int S = n + m + 1, T = n + m + 2;
-    // 跨部边容量用 1E18，int 装不下（原写 Flow 即 Flow_<int>，会溢出 UB），必须用 long long
+
     Flow_<long long> flow(T);
     for (int i = 1; i <= n; i++) {
         int w;

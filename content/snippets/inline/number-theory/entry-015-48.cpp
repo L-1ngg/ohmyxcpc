@@ -1,16 +1,17 @@
+using i64 = long long;
 int x, y;
-int exgcd(int a, int b, int &x, int &y) {  //扩展欧几里得算法
+int exgcd(int a, int b, int &x, int &y) {
     if (b == 0) {
         x = 1, y = 0;
-        return a; //到达递归边界开始向上一层返回
+        return a;
     }
     int r = exgcd(b, a % b, x, y);
-    int temp = y; //把x y变成上一层的
+    int temp = y;
     y = x - (a / b) * y;
     x = temp;
-    return r;  //得到a b的最大公因数
+    return r;
 }
-LL getInv(int a, int mod) {  //求a在mod下的逆元，不存在逆元返回-1
-    LL x, y, d = exgcd(a, mod, x, y);
+i64 getInv(int a, int mod) {
+    i64 x, y, d = exgcd(a, mod, x, y);
     return d == 1 ? (x % mod + mod) % mod : -1;
 }

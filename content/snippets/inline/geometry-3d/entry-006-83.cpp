@@ -7,7 +7,7 @@ signed main() {
         cin >> it;
     }
 
-    #define S(x, y, z) triangleAreaEx(in[x], in[y], in[z])
+#define S(x, y, z) triangleAreaEx(in[x], in[y], in[z])
 
     int i = 0, j = 1, k = 2;
     while (true) {

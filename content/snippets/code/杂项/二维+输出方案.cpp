@@ -16,12 +16,12 @@ int main() {
     vector<int> val{0}, idx{0}, pre(n + 1);
     for (int i = 1; i <= n; i++) {
         auto [x, y, z] = in[i];
-        int it = lower_bound(val.begin(), val.end(), y) - val.begin();  // low/upp: 严格/非严格递增
-        if (it >= val.size()) {  // 新增一堆
+        int it = lower_bound(val.begin(), val.end(), y) - val.begin();
+        if (it >= val.size()) {
             pre[z] = idx.back();
             val.push_back(y);
             idx.push_back(z);
-        } else {  // 更新对应位置元素
+        } else {
             pre[z] = idx[it - 1];
             val[it] = y;
             idx[it] = z;

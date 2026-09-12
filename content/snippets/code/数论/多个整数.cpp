@@ -1,10 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long i64;
-typedef long long ll;
-typedef long long LL;
-typedef long double ld;
-typedef unsigned long long u64;
+
+using i64 = long long;
+using ld = long double;
+using u64 = unsigned long long;
 const int MOD = 998244353;
 const int mod = 1000000007;
 const int N = 1000005;
@@ -37,13 +36,14 @@ void sieve(int n) {
 }
 
 // @book-begin
-LL n, a, ans;
-LL gcd(LL a, LL b){
+using i64 = long long;
+i64 n, a, ans;
+i64 gcd(i64 a, i64 b) {
     return b ? gcd(b, a % b) : a;
 }
-int main(){
+int main() {
     cin >> n;
-    for (int i = 0; i < n; i ++ ){
+    for (int i = 0; i < n; i++) {
         cin >> a;
         if (a < 0) a = -a;
         ans = gcd(ans, a);

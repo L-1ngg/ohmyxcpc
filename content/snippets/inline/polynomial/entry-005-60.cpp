@@ -1,4 +1,5 @@
-template<int P = 998244353> MInt<P> linearRecurrence(Poly<P> p, Poly<P> q, i64 n) {
+using i64 = long long;
+template <int P = 998244353> MInt<P> linearRecurrence(Poly<P> p, Poly<P> q, i64 n) {
     int m = q.size() - 1;
     while (n > 0) {
         auto newq = q;

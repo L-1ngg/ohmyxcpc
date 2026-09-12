@@ -5,7 +5,7 @@ order: 30
 
 # lucas 定理 {#s-2a28dd101588}
 
-  $n , m$ 很大而模数 $p$ 为不超过约 $10^{5}$ 的质数时用。`C(a,b,p)` 需自行预处理小于 $p$ 的组合数（上面 `Comb` 或杨辉均可）。递归层数 $\mathcal{O} ( \text{log}_{p} n )$。
+Lucas 定理把大下标组合数拆成质数进制下的小组合数，要求模数 $p$ 为质数。`C(a, b, p)` 需支持 $0\le a,b<p$ 的查询；若已预处理阶乘和逆元，单次 Lucas 查询为 $O(\log_p n)$，预处理需要 $O(p)$ 时间和空间。
 
 Lucas 定理内容如下：对于质数 $p$，有
 
@@ -18,9 +18,9 @@ $$
 时间复杂度为 $O ( f ( p ) + g ( n ) \text{log} n )$，其中 $f ( n )$ 为预处理组合数的复杂度，$g ( n )$ 为单次求组合数的复杂度。
 
 ```cpp
-long long Lucas(long long n, long long m, long long p) {  // 原来参数名 lm，函数体用 m，无法编译
-  if (m == 0) return 1;  // C(n,0)=1；C 需预处理到 p
-  return (C(n % p, m % p, p) * Lucas(n / p, m / p, p)) % p;
+long long Lucas(long long n, long long m, long long p) {
+    if (m == 0) return 1;
+    return (C(n % p, m % p, p) * Lucas(n / p, m / p, p)) % p;
 }
 ```
 

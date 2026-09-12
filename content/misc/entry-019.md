@@ -5,7 +5,7 @@ order: 190
 
 # Python 常用语法 {#s-ad41f45a2a68}
 
-  大整数、高精度、简单脚本用。递归默认深度约 $1000$，要改 `setrecursionlimit`。输出用 `print`，大量输出注意不要逐行 flush。
+大整数、高精度、简单脚本用。递归默认深度约 $1000$，要改 `setrecursionlimit`。输出用 `print`，大量输出注意不要逐行 flush。
 
 ## 读入与定义 {#s-2b4b7ae99980}
 
@@ -27,12 +27,12 @@ order: 190
 
 - 自定义排序：下方代码实现了先按第一关键字降序、再按第二关键字升序排序。
 
-   
+
 
    ```python
    X.sort(key=lambda x: x[1])
    X.sort(key=lambda x: x[0], reverse=True)
-   ```
+```
 
 ## 文件 IO {#s-236bcdaa3063}
 
@@ -44,7 +44,7 @@ order: 190
 
 ## 增加输出流长度、递归深度 {#s-e90880e7c235}
 
-  `sys.setrecursionlimit` 把递归上限抬高；`sys.set_int_max_str_digits` 允许超长整数转字符串（3.11+）。过大可能爆栈。
+`sys.setrecursionlimit` 把递归上限抬高；`sys.set_int_max_str_digits` 允许超长整数转字符串（3.11+）。过大可能爆栈。
 
 ```python
 import sys
@@ -54,7 +54,7 @@ sys.setrecursionlimit(100000)
 
 ## 自定义结构体 {#s-7cf8bcb8140c}
 
-  `sort(key=lambda x: ...)` 按成员排序自定义对象，`reverse=True` 降序。
+`sort(key=lambda x: ...)` 按成员排序自定义对象，`reverse=True` 降序。
 
 ```python
 class node:

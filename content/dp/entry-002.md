@@ -5,7 +5,7 @@ order: 20
 
 # 完全背包 {#s-93bf89f1ef16}
 
-  有 $n$ 件物品和一个容量为 $W$ 的背包，第 $i$ 件物品的体积为 $w [ i ]$，价值为 $v [ i ]$，每件物品有**无限个**，求解将哪些物品装入背包中使总价值最大。
+每种物品可选任意多件，在总容量不超过 `W` 时最大化价值。`w[i]` 为正体积、`v[i]` 为价值；一维实现按容量正序枚举，使当前物品能重复使用。优化后时间 $O(nW)$，空间 $O(W)$。
 
 **思路:**
 
@@ -14,7 +14,7 @@ order: 20
 ```cpp
 for (int i = 1; i <= n; i++)
     for (int j = 0; j <= W; j++)
-        for (int k = 0; k * w[i] <= j; k++)  //选取几个物品
+        for (int k = 0; k * w[i] <= j; k++)
             dp[i][j] = max(dp[i][j], dp[i - 1][j - k * w[i]] + k * v[i]);
 ```
 
@@ -22,10 +22,9 @@ for (int i = 1; i <= n; i++)
 
 ```cpp
 for (int i = 1; i <= n; i++)
-    for (int j = 0; j <= W; j++){
+    for (int j = 0; j <= W; j++) {
         dp[i][j] = dp[i - 1][j];
-        if (j >= w[i])
-            dp[i][j] = max(dp[i][j], dp[i][j - w[i]] + v[i]);
+        if (j >= w[i]) dp[i][j] = max(dp[i][j], dp[i][j - w[i]] + v[i]);
     }
 ```
 

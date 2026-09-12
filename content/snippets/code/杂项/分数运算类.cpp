@@ -2,7 +2,7 @@
 int n, m;
 
 // @book-begin
-template<typename T> struct Frac {
+template <typename T> struct Frac {
     T x, y;
     Frac() : Frac(0, 1) {}
     Frac(T x_) : Frac(x_, 1) {}
@@ -13,10 +13,8 @@ template<typename T> struct Frac {
         }
     }
 
-    constexpr double val() const {
-        return 1. * x / y;
-    }
-    constexpr Frac norm() const {  // 调整符号、转化为最简形式
+    constexpr double val() const { return 1. * x / y; }
+    constexpr Frac norm() const {
         T p = gcd(x, y);
         return {x / p, y / p};
     }
@@ -52,4 +50,6 @@ template<typename T> struct Frac {
 };
 // @book-end
 
-int main() { return 0; }
+int main() {
+    return 0;
+}

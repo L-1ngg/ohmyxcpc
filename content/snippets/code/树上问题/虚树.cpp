@@ -1,10 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long i64;
-typedef long long ll;
-typedef long long LL;
-typedef long double ld;
-typedef unsigned long long u64;
+
+using ld = long double;
+using u64 = unsigned long long;
 const int MOD = 998244353;
 const int mod = 1000000007;
 const int N = 1000005;
@@ -15,7 +13,7 @@ const double PI = acos(-1.0);
 // @book-begin
 struct VirtualTree {
     int n, cnt = 0;
-    vector<vector<int>> ver, h;  // 原树 / 虚树邻接表
+    vector<vector<int>> ver, h;
     vector<int> siz, dep, top, son, parent, dfn, stk;
 
     VirtualTree(int n) : n(n) {
@@ -29,7 +27,7 @@ struct VirtualTree {
         dfn.resize(n + 1);
         stk.resize(n + 1);
     }
-    void add(int x, int y) {  // 建立双向边
+    void add(int x, int y) {
         ver[x].push_back(y);
         ver[y].push_back(x);
     }
@@ -65,15 +63,21 @@ struct VirtualTree {
         }
         return dep[x] < dep[y] ? x : y;
     }
-    vector<int> build(vector<int> q) {  // 返回虚树上的全部点（含自动补入的根）
+    vector<int> build(vector<int> q) {
         if (find(q.begin(), q.end(), 1) == q.end()) {
-            q.push_back(1);  // 补根：虚树从根连通，dp 才有起点
+            q.push_back(1);
         }
         sort(q.begin(), q.end(), [&](int a, int b) { return dfn[a] < dfn[b]; });
-        vector<int> used;  // dp 完按它清空 h，供多组询问复用
-        int tp = 0;        // 单调栈存根到栈顶的链，dfn 递增
-        auto push = [&](int x) { stk[++tp] = x; used.push_back(x); };
-        auto link = [&](int u, int v) { h[u].push_back(v); h[v].push_back(u); };
+        vector<int> used;
+        int tp = 0;
+        auto push = [&](int x) {
+            stk[++tp] = x;
+            used.push_back(x);
+        };
+        auto link = [&](int u, int v) {
+            h[u].push_back(v);
+            h[v].push_back(u);
+        };
         for (int x : q) {
             if (!tp) {
                 push(x);
@@ -98,11 +102,13 @@ struct VirtualTree {
         }
         return used;
     }
-    void work(int root = 1) {  // 先 work 再 build
+    void work(int root = 1) {
         dfs1(root);
         dfs2(root, root);
     }
 };
 // @book-end
 
-int main() { return 0; }
+int main() {
+    return 0;
+}

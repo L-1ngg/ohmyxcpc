@@ -1,10 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long i64;
-typedef long long ll;
-typedef long long LL;
-typedef long double ld;
-typedef unsigned long long u64;
+
+using ld = long double;
+using u64 = unsigned long long;
 const int MOD = 998244353;
 const int mod = 1000000007;
 const int M = 2000005;
@@ -12,13 +10,14 @@ const double eps = 1e-8;
 const double PI = acos(-1.0);
 
 // @book-begin
-const int N = 1e6 + 10;  // 按题目改
+const int N = 1e6 + 10;
 int T, n, a[N], c, tr[N << 2];
-void pushup(int u){
+void pushup(int u) {
     tr[u] = max(tr[u << 1], tr[u << 1 | 1]);
 }
-void build(int u, int l, int r){
-    if (l == r) tr[u] = c;
+void build(int u, int l, int r) {
+    if (l == r)
+        tr[u] = c;
     else {
         int mid = l + r >> 1;
         build(u << 1, l, mid);
@@ -26,9 +25,10 @@ void build(int u, int l, int r){
         pushup(u);
     }
 }
-void update(int u, int l, int r, int p, int k){
+void update(int u, int l, int r, int p, int k) {
     if (l > p || r < p) return;
-    if (l == r) tr[u] -= k;
+    if (l == r)
+        tr[u] -= k;
     else {
         int mid = l + r >> 1;
         update(u << 1, l, mid, p, k);
@@ -36,18 +36,21 @@ void update(int u, int l, int r, int p, int k){
         pushup(u);
     }
 }
-int query(int u, int l, int r, int k){
-    if (l == r){
+int query(int u, int l, int r, int k) {
+    if (l == r) {
         if (tr[u] >= k) return l;
         return n + 1;
     }
     int mid = l + r >> 1;
-    if (tr[u << 1] >= k) return query(u << 1, l, mid, k);
-    else return query(u << 1 | 1, mid + 1, r, k);
+    if (tr[u << 1] >= k)
+        return query(u << 1, l, mid, k);
+    else
+        return query(u << 1 | 1, mid + 1, r, k);
 }
 int main() {
     cin >> n >> c;
-    for (int i = 1; i <= n; i++) cin >> a[i];
+    for (int i = 1; i <= n; i++)
+        cin >> a[i];
     build(1, 1, n);
     for (int i = 1; i <= n; i++)
         update(1, 1, n, query(1, 1, n, a[i]), a[i]);

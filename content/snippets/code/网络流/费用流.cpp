@@ -1,10 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long i64;
-typedef long long ll;
-typedef long long LL;
-typedef long double ld;
-typedef unsigned long long u64;
+
+using i64 = long long;
+using ld = long double;
+using u64 = unsigned long long;
 const int MOD = 998244353;
 const int mod = 1000000007;
 const int N = 1000005;
@@ -12,7 +11,7 @@ const int M = 2000005;
 const double eps = 1e-8;
 const double PI = acos(-1.0);
 
-template<typename T> struct Flow_ {
+template <typename T> struct Flow_ {
     const int n;
     const T inf = numeric_limits<T>::max();
     struct Edge {
@@ -77,7 +76,7 @@ template<typename T> struct Flow_ {
     }
 };
 using Flow = Flow_<int>;
-template<typename T> struct PushRelabel {
+template <typename T> struct PushRelabel {
     const int inf = 0x3f3f3f3f;
     const T INF = 0x3f3f3f3f3f3f3f3f;
     struct Edge {
@@ -86,7 +85,7 @@ template<typename T> struct PushRelabel {
     };
     vector<vector<Edge>> e;
     vector<vector<int>> gap;
-    vector<T> ex;  // 超额流
+    vector<T> ex;
     vector<bool> ingap;
     vector<int> h;
     int n, gobalcnt, maxH = 0;
@@ -191,10 +190,11 @@ template<typename T> struct PushRelabel {
 };
 
 // @book-begin
+using i64 = long long;
 struct MinCostFlow {
-    using LL = long long;
-    using PII = pair<LL, int>;
-    const LL INF = numeric_limits<LL>::max();
+
+    using PII = pair<i64, int>;
+    const i64 INF = numeric_limits<i64>::max();
     struct Edge {
         int v, c, f;
         Edge(int v, int c, int f) : v(v), c(c), f(f) {}
@@ -202,23 +202,17 @@ struct MinCostFlow {
     const int n;
     vector<Edge> e;
     vector<vector<int>> g;
-    vector<LL> h, dis;
+    vector<i64> h, dis;
     vector<int> pre;
 
     MinCostFlow(int n) : n(n), g(n) {}
-    // c 流量, f 费用；f < 0 时打开注释分支（先沿反向流满 c，"平移"成正费用，注意残余网络含义变化）
+
     void add(int u, int v, int c, int f) {
-        // if (f < 0) {
-        //     g[u].push_back(e.size());
-        //     e.emplace_back(v, 0, f);
-        //     g[v].push_back(e.size());
-        //     e.emplace_back(u, c, -f);
-        // } else {
-            g[u].push_back(e.size());
-            e.emplace_back(v, c, f);
-            g[v].push_back(e.size());
-            e.emplace_back(u, 0, -f);
-        // }
+
+        g[u].push_back(e.size());
+        e.emplace_back(v, c, f);
+        g[v].push_back(e.size());
+        e.emplace_back(u, 0, -f);
     }
     bool dijkstra(int s, int t) {
         dis.assign(n, INF);
@@ -241,25 +235,28 @@ struct MinCostFlow {
         }
         return dis[t] != INF;
     }
-    pair<int, LL> flow(int s, int t) {  // 最大流可能超过 int 时把 int 改 long long
+    pair<int, i64> flow(int s, int t) {
         int flow = 0;
-        LL cost = 0;
+        i64 cost = 0;
         h.assign(n, 0);
         while (dijkstra(s, t)) {
             for (int i = 0; i < n; ++i)
-                if (dis[i] != INF) h[i] += dis[i];  // 不可达点 dis = INF，直接加会溢出 long long，必须判掉
+                if (dis[i] != INF) h[i] += dis[i];
             int aug = numeric_limits<int>::max();
-            for (int i = t; i != s; i = e[pre[i] ^ 1].v) aug = min(aug, e[pre[i]].c);
+            for (int i = t; i != s; i = e[pre[i] ^ 1].v)
+                aug = min(aug, e[pre[i]].c);
             for (int i = t; i != s; i = e[pre[i] ^ 1].v) {
                 e[pre[i]].c -= aug;
                 e[pre[i] ^ 1].c += aug;
             }
             flow += aug;
-            cost += LL(aug) * h[t];
+            cost += i64(aug) * h[t];
         }
         return {flow, cost};
     }
 };
 // @book-end
 
-int main() { return 0; }
+int main() {
+    return 0;
+}

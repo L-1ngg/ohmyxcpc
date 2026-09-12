@@ -8,25 +8,25 @@ struct BIT_2D {
         b3.resize(n + 1, vector<int>(m + 1));
         b4.resize(n + 1, vector<int>(m + 1));
     }
-    void add(auto &w, int x, int y, int k) {  // 单点修改
+    void add(auto &w, int x, int y, int k) {
         for (int i = x; i <= n; i += i & -i) {
             for (int j = y; j <= m; j += j & -j) {
                 w[i][j] += k;
             }
         }
     }
-    void add(int x, int y, int k) {  // 多了一步计算
+    void add(int x, int y, int k) {
         add(b1, x, y, k);
         add(b2, x, y, k * (x - 1));
         add(b3, x, y, k * (y - 1));
         add(b4, x, y, k * (x - 1) * (y - 1));
     }
-    void add(int x, int y, int X, int Y, int k) {  // 区块修改：二维差分
+    void add(int x, int y, int X, int Y, int k) {
         X++, Y++;
         add(x, y, k), add(X, y, -k);
         add(X, Y, k), add(x, Y, -k);
     }
-    int ask(auto &w, int x, int y) {  // 单点查询
+    int ask(auto &w, int x, int y) {
         int ans = 0;
         for (int i = x; i; i -= i & -i) {
             for (int j = y; j; j -= j & -j) {
@@ -35,7 +35,7 @@ struct BIT_2D {
         }
         return ans;
     }
-    int ask(int x, int y) {  // 多了一步计算
+    int ask(int x, int y) {
         int ans = 0;
         ans += x * y * ask(b1, x, y);
         ans -= y * ask(b2, x, y);
@@ -43,7 +43,7 @@ struct BIT_2D {
         ans += ask(b4, x, y);
         return ans;
     }
-    int ask(int x, int y, int X, int Y) {  // 区块查询：二维前缀和
+    int ask(int x, int y, int X, int Y) {
         x--, y--;
         return ask(X, Y) - ask(x, Y) - ask(X, y) + ask(x, y);
     }

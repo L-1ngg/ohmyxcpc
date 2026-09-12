@@ -1,4 +1,4 @@
-int onPolygonGrid(vector<Point<int>> p) { // 多边形上
+int onPolygonGrid(vector<Point<int>> p) {
     int n = p.size(), ans = 0;
     for (int i = 0; i < n; i++) {
         auto a = p[i], b = p[(i + 1) % n];
@@ -6,7 +6,7 @@ int onPolygonGrid(vector<Point<int>> p) { // 多边形上
     }
     return ans;
 }
-int inPolygonGrid(vector<Point<int>> p) { // 多边形内
+int inPolygonGrid(vector<Point<int>> p) {
     int n = p.size(), ans = 0;
     for (int i = 0; i < n; i++) {
         auto a = p[i], b = p[(i + 1) % n], c = p[(i + 2) % n];

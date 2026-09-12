@@ -56,19 +56,19 @@ struct Tree {
 
     int radius, center, diam;
     void getCenter() {
-        center = 1;  //中心
+        center = 1;
         for (int i = 1; i <= n; i++) {
             if (max(d1[i], up[i]) < max(d1[center], up[center])) {
                 center = i;
             }
         }
-        radius = max(d1[center], up[center]);  //距离最远点的距离的最小值
-        //直径：仅在 center 位于直径中点时正确；一般应取 max(d1[i] + d2[i])
+        radius = max(d1[center], up[center]);
+
         diam = d1[center] + up[center] + 1;
     }
 
-    int rem; //删除重心后剩余连通块体积的最小值
-    int cog; //重心
+    int rem;
+    int cog;
     vector<bool> vis;
     void getCog() {
         vis.resize(n);

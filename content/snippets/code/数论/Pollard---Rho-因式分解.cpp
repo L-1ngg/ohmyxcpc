@@ -1,10 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long i64;
-typedef long long ll;
-typedef long long LL;
-typedef long double ld;
-typedef unsigned long long u64;
+
+using i64 = long long;
+using ld = long double;
+using u64 = unsigned long long;
 const int MOD = 998244353;
 const int mod = 1000000007;
 const int M = 2000005;
@@ -44,23 +43,23 @@ int exgcd(int a, int b, int &x, int &y) {
     return d;
 }
 i64 euclidean(i64 a, i64 b, i64 c, i64 n) {
-    // sum{0, n}(floor((a * i + b) / c))
+
     i64 n2 = n * (n + 1) / 2;
-    if (a >= c || b >= c)
-        return euclidean(a % c, b % c, c, n) + (a / c) * n2 + (b / c) * (n + 1);
+    if (a >= c || b >= c) return euclidean(a % c, b % c, c, n) + (a / c) * n2 + (b / c) * (n + 1);
     i64 m = (a * n + b) / c;
     if (!m) return 0;
     return m * n - euclidean(c, c - b - 1, a, m - 1);
 }
-int phi(int n) {  //求解 phi(n)
+int phi(int n) {
     int ans = n;
-    for(int i = 2; i <= n / i; i ++) { //注意，这里要写 n / i ，以防止 int 型溢出风险和 sqrt 超时风险
-        if(n % i == 0) {
+    for (int i = 2; i <= n / i; i++) {
+        if (n % i == 0) {
             ans = ans / i * (i - 1);
-            while(n % i == 0) n /= i;
+            while (n % i == 0)
+                n /= i;
         }
     }
-    if(n > 1) ans = ans / n * (n - 1); //特判 n 为质数的情况
+    if (n > 1) ans = ans / n * (n - 1);
     return ans;
 }
 bool is_prime(int n) {
@@ -71,14 +70,18 @@ bool is_prime(int n) {
     return true;
 }
 i64 xor_n(i64 n) {
-    if (n % 4 == 1) return 1;
-    else if (n % 4 == 2) return n + 1;
-    else if (n % 4 == 3) return 0;
-    else return n;
+    if (n % 4 == 1)
+        return 1;
+    else if (n % 4 == 2)
+        return n + 1;
+    else if (n % 4 == 3)
+        return 0;
+    else
+        return n;
 }
-const int N = 40;  // 按题目矩阵大小改
+const int N = 40;
 using mat = std::array<std::array<i64, N + 1>, N + 1>;
-mat operator*(const mat& a, const mat& b) {
+mat operator*(const mat &a, const mat &b) {
     mat ans{};
     for (int i = 1; i <= N; i++) {
         for (int j = 1; j <= N; j++) {
@@ -91,7 +94,8 @@ mat operator*(const mat& a, const mat& b) {
 
 mat MatPow(mat a, i64 b) {
     mat ans{};
-    for (int i = 1;i <= N;i++) ans[i][i] = 1;
+    for (int i = 1; i <= N; i++)
+        ans[i][i] = 1;
     while (b) {
         if (b & 1) ans = ans * a;
         b >>= 1;
@@ -153,7 +157,7 @@ int PR(int n) {
     return g;
 }
 vector<int> fac(int n) {
-    #define pb emplace_back
+#define pb emplace_back
     if (n == 1) return {};
     if (MR(n)) return {n};
     int d = PR(n);
@@ -177,4 +181,6 @@ vector<int> fac(int n) {
 }
 // @book-end
 
-int main() { return 0; }
+int main() {
+    return 0;
+}

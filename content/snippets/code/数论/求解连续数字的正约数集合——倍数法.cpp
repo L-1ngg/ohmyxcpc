@@ -1,10 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long i64;
-typedef long long ll;
-typedef long long LL;
-typedef long double ld;
-typedef unsigned long long u64;
+
+using i64 = long long;
+using ld = long double;
+using u64 = unsigned long long;
 const int MOD = 998244353;
 const int mod = 1000000007;
 const int M = 2000005;
@@ -44,23 +43,23 @@ int exgcd(int a, int b, int &x, int &y) {
     return d;
 }
 i64 euclidean(i64 a, i64 b, i64 c, i64 n) {
-    // sum{0, n}(floor((a * i + b) / c))
+
     i64 n2 = n * (n + 1) / 2;
-    if (a >= c || b >= c)
-        return euclidean(a % c, b % c, c, n) + (a / c) * n2 + (b / c) * (n + 1);
+    if (a >= c || b >= c) return euclidean(a % c, b % c, c, n) + (a / c) * n2 + (b / c) * (n + 1);
     i64 m = (a * n + b) / c;
     if (!m) return 0;
     return m * n - euclidean(c, c - b - 1, a, m - 1);
 }
-int phi(int n) {  //求解 phi(n)
+int phi(int n) {
     int ans = n;
-    for(int i = 2; i <= n / i; i ++) { //注意，这里要写 n / i ，以防止 int 型溢出风险和 sqrt 超时风险
-        if(n % i == 0) {
+    for (int i = 2; i <= n / i; i++) {
+        if (n % i == 0) {
             ans = ans / i * (i - 1);
-            while(n % i == 0) n /= i;
+            while (n % i == 0)
+                n /= i;
         }
     }
-    if(n > 1) ans = ans / n * (n - 1); //特判 n 为质数的情况
+    if (n > 1) ans = ans / n * (n - 1);
     return ans;
 }
 
@@ -71,16 +70,19 @@ const int N = 1e5 + 7;
 vector<int> f[N];
 
 void divide(int n) {
-    for (int i = 1; i <= n; ++ i)
-        for (int j = 1; j <= n / i; ++ j)
+    for (int i = 1; i <= n; ++i)
+        for (int j = 1; j <= n / i; ++j)
             f[i * j].push_back(i);
-    for (int i = 1; i <= n; ++ i) {
-        for (auto it : f[i]) cout << it << " ";
+    for (int i = 1; i <= n; ++i) {
+        for (auto it : f[i])
+            cout << it << " ";
         cout << endl;
     }
 }
 int main() {
-    int x; cin >> x; divide(x);
+    int x;
+    cin >> x;
+    divide(x);
     return 0;
 }
 // @book-end

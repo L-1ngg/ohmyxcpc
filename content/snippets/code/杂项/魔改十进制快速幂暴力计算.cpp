@@ -21,15 +21,15 @@ signed main() {
     int p;
     cin >> n_ >> k_ >> p;
 
-    int n = 0;  // 转化并计算 n % p
+    int n = 0;
     for (auto it : n_) {
         n = n * 10 + it - '0';
         n %= p;
     }
-    vector<int> k;  // 转化 k
+    vector<int> k;
     for (auto it : k_) {
         k.push_back(it - '0');
     }
-    cout << mypow10(n, k, p) << endl;  // 暴力快速幂
+    cout << mypow10(n, k, p) << endl;
 }
 // @book-end

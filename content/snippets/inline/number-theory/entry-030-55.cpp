@@ -1,7 +1,8 @@
-const int N = 5e4 + 10;  // 按题目改
+using i64 = long long;
+const int N = 5e4 + 10;
 bool st[N];
 int mu[N], prime[N], cnt, sum[N];
-void getMu() {  // 线性筛 mu，再前缀和，O(N)
+void getMu() {
     mu[1] = 1;
     for (int i = 2; i <= N - 10; i++) {
         if (!st[i]) {
@@ -22,18 +23,21 @@ void getMu() {  // 线性筛 mu，再前缀和，O(N)
     }
 }
 void solve() {
-    int n, m, k; cin >> n >> m >> k;
+    int n, m, k;
+    cin >> n >> m >> k;
     n = n / k, m = m / k;
     if (n < m) swap(n, m);
-    LL ans = 0;
+    i64 ans = 0;
     for (int i = 1, j = 0; i <= m; i = j + 1) {
         j = min(n / (n / i), m / (m / i));
-        ans += (LL)(sum[j] - sum[i - 1]) * (n / i) * (m / i);
+        ans += (i64)(sum[j] - sum[i - 1]) * (n / i) * (m / i);
     }
     cout << ans << "\n";
 }
 int main() {
     getMu();
-    int T; cin >> T;
-    while (T--) solve();
+    int T;
+    cin >> T;
+    while (T--)
+        solve();
 }

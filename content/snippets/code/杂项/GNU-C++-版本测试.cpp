@@ -3,26 +3,26 @@ int n, m;
 
 // @book-begin
 int main() {
-    for (int i : {1, 2}) {}  // GNU C++11 支持范围表达式
+    for (int i : {1, 2}) {}
 
-    auto cc = [&](int x) { x++; };  // GNU C++11 支持 auto 与 lambda 表达式
+    auto cc = [&](int x) { x++; };
     cc(2);
 
-    tuple<string, int, int> V; // GNU C++11 引入
-    array<int, 3> C;  // GNU C++11 引入
+    tuple<string, int, int> V;
+    array<int, 3> C;
 
-    auto dfs = [&](auto self, int x) -> void {  // GNU C++14 支持 auto 自递归
+    auto dfs = [&](auto self, int x) -> void {
         if (x > 10) return;
         self(self, x + 1);
     };
     dfs(dfs, 1);
 
-    vector in(1, vector<int>(1));  // GNU C++17 支持 vector 模板类型缺失
+    vector in(1, vector<int>(1));
 
     map<int, int> dic;
-    for (auto [u, v] : dic) {} // GNU C++17 支持 auto 解绑
-    dic.contains(12);  // GNU C++20 支持 contains 函数
+    for (auto [u, v] : dic) {}
+    dic.contains(12);
 
-    constexpr double Pi = numbers::pi;  // C++20 支持
+    constexpr double Pi = numbers::pi;
 }
 // @book-end

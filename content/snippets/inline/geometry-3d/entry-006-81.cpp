@@ -1,12 +1,12 @@
 signed main() {
     Pi s, e;
-    cin >> s >> e; // 读入线段
+    cin >> s >> e;
 
     int n;
     cin >> n;
     vector<Pi> in(n);
     for (auto &it : in) {
-        cin >> it; // 读入多边形端点
+        cin >> it;
     }
 
     int cnt = 0;

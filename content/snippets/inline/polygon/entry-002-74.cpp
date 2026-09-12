@@ -1,4 +1,4 @@
-template<typename T> int contains(Point<T> p, vector<Point<T>> A) {
+template <typename T> int contains(Point<T> p, vector<Point<T>> A) {
     int n = A.size();
     bool in = false;
     for (int i = 0; i < n; i++) {

@@ -8,16 +8,16 @@ struct Tree {
         val.resize(n + 1, vector<int>(30));
         lg.resize(n + 1);
         dep.resize(n + 1);
-        for (int i = 1; i <= n; i++) {  //预处理 log
+        for (int i = 1; i <= n; i++) {
             lg[i] = lg[i - 1] + (1 << lg[i - 1] == i);
         }
     }
-    void add(int x, int y) { // 建立双向边
+    void add(int x, int y) {
         ver[x].push_back(y);
         ver[y].push_back(x);
     }
     void dfs(int x, int fa) {
-        val[x][0] = fa;  // 储存 x 的父节点
+        val[x][0] = fa;
         dep[x] = dep[fa] + 1;
         for (int i = 1; i <= lg[dep[x]]; i++) {
             val[x][i] = val[val[x][i - 1]][i - 1];
@@ -40,10 +40,6 @@ struct Tree {
         }
         return val[x][0];
     }
-    int clac(int x, int y) { // 倍增查询两点间距离
-        return dep[x] + dep[y] - 2 * dep[lca(x, y)];
-    }
-    void work(int root = 1) {  // 在此初始化
-        dfs(root, 0);
-    }
+    int clac(int x, int y) { return dep[x] + dep[y] - 2 * dep[lca(x, y)]; }
+    void work(int root = 1) { dfs(root, 0); }
 };

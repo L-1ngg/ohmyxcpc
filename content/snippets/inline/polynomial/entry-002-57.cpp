@@ -1,4 +1,4 @@
-template<int P = 998244353> struct Poly : public vector<MInt<P>> {
+template <int P = 998244353> struct Poly : public vector<MInt<P>> {
     using Value = MInt<P>;
 
     Poly() : vector<Value>() {}
@@ -7,11 +7,10 @@ template<int P = 998244353> struct Poly : public vector<MInt<P>> {
     explicit constexpr Poly(const vector<Value> &a) : vector<Value>(a) {}
     constexpr Poly(const initializer_list<Value> &a) : vector<Value>(a) {}
 
-    template<typename InputIt, typename = _RequireInputIter<InputIt>>
+    template <typename InputIt, typename = _RequireInputIter<InputIt>>
     explicit constexpr Poly(InputIt first, InputIt last) : vector<Value>(first, last) {}
 
-    template<typename F>
-    explicit constexpr Poly(int n, F f) : vector<Value>(n) {  // 原来写成 F>plicit，无法编译
+    template <typename F> explicit constexpr Poly(int n, F f) : vector<Value>(n) {
         for (int i = 0; i < n; i++) {
             (*this)[i] = f(i);
         }
@@ -109,21 +108,11 @@ template<int P = 998244353> struct Poly : public vector<MInt<P>> {
         }
         return a;
     }
-    constexpr Poly &operator+=(Poly b) {
-        return (*this) = (*this) + b;
-    }
-    constexpr Poly &operator-=(Poly b) {
-        return (*this) = (*this) - b;
-    }
-    constexpr Poly &operator*=(Poly b) {
-        return (*this) = (*this) * b;
-    }
-    constexpr Poly &operator*=(Value b) {
-        return (*this) = (*this) * b;
-    }
-    constexpr Poly &operator/=(Value b) {
-        return (*this) = (*this) / b;
-    }
+    constexpr Poly &operator+=(Poly b) { return (*this) = (*this) + b; }
+    constexpr Poly &operator-=(Poly b) { return (*this) = (*this) - b; }
+    constexpr Poly &operator*=(Poly b) { return (*this) = (*this) * b; }
+    constexpr Poly &operator*=(Value b) { return (*this) = (*this) * b; }
+    constexpr Poly &operator/=(Value b) { return (*this) = (*this) / b; }
     constexpr Poly deriv() const {
         if (this->empty()) {
             return Poly();
@@ -150,9 +139,7 @@ template<int P = 998244353> struct Poly : public vector<MInt<P>> {
         }
         return x.trunc(m);
     }
-    constexpr Poly log(int m) const {
-        return (deriv() * inv(m)).integr().trunc(m);
-    }
+    constexpr Poly log(int m) const { return (deriv() * inv(m)).integr().trunc(m); }
     constexpr Poly exp(int m) const {
         Poly x{1};
         int k = 1;
@@ -211,7 +198,7 @@ template<int P = 998244353> struct Poly : public vector<MInt<P>> {
         };
         build(1, 0, n);
         function<void(int, int, int, const Poly &)> work = [&](int p, int l, int r,
-                                                                    const Poly &num) {
+                                                               const Poly &num) {
             if (r - l == 1) {
                 if (l < int(ans.size())) {
                     ans[l] = num[0];

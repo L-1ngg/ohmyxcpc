@@ -1,4 +1,4 @@
-template<typename T> T sqr(T x) {
+template <typename T> T sqr(T x) {
     return x * x;
 }
 
@@ -12,13 +12,13 @@ signed main() {
         cin >> it;
     }
 
-    int dis = disEx(in[0], in[1]);  // 设定阈值
+    int dis = disEx(in[0], in[1]);
     sort(in.begin(), in.end());
 
     set<V> S;
     for (int i = 0, h = 0; i < n; i++) {
         V now = {in[i].y, in[i].x};
-        while (dis && dis <= sqr(in[i].x - in[h].x)) {  // 删除超过阈值的点
+        while (dis && dis <= sqr(in[i].x - in[h].x)) {
             S.erase({in[h].y, in[h].x});
             h++;
         }

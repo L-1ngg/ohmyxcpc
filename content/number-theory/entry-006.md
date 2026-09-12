@@ -5,7 +5,9 @@ order: 60
 
 # 同余 {#s-9413cbad71d3}
 
-  **定义** 设整数 $m \ne 0$。若 $m \mid ( a - b )$，称 $m$ 为 **模数**（**模**），$a$ 同余于 $b$ 模 $m$，$b$ 是 $a$ 对模 $m$ 的 **剩余**。记作 $a \equiv b ( \operatorname{mod} m )$。
+同余把整数按模数归类，允许在模意义下进行加减乘运算。除法与消去因子需要额外条件，不能直接沿用实数运算法则。
+
+**定义** 设整数 $m \ne 0$。若 $m \mid ( a - b )$，称 $m$ 为 **模数**（**模**），$a$ 同余于 $b$ 模 $m$，$b$ 是 $a$ 对模 $m$ 的 **剩余**。记作 $a \equiv b ( \operatorname{mod} m )$。
 
 否则，$a$ 不同余于 $b$ 模 $m$，$b$ 不是 $a$ 对模 $m$ 的剩余。记作 $a \not\equiv b ( \operatorname{mod} m )$。
 
@@ -19,14 +21,14 @@ order: 60
 
 同余的性质：
 
-- 同余是等价关系，即同余具有 
+- 同余是等价关系，即同余具有
    - 自反性：$a \equiv a ( \operatorname{mod} m )$。
 
    - 对称性：若 $a \equiv b ( \operatorname{mod} m )$，则 $b \equiv a ( \operatorname{mod} m )$。
 
    - 传递性：若 $a \equiv b ( \operatorname{mod} m ) , b \equiv c ( \operatorname{mod} m )$，则 $a \equiv c ( \operatorname{mod} m )$。
 
-- 线性运算：若 $a , b , c , d \in \mathbf{Z} , m \in \mathbf{N}^{*} , a \equiv b ( \operatorname{mod} m ) , c \equiv d ( \operatorname{mod} m )$ 则有： 
+- 线性运算：若 $a , b , c , d \in \mathbf{Z} , m \in \mathbf{N}^{*} , a \equiv b ( \operatorname{mod} m ) , c \equiv d ( \operatorname{mod} m )$ 则有：
    - $a \pm c \equiv b \pm d ( \operatorname{mod} m )$。
 
    - $a \times c \equiv b \times d ( \operatorname{mod} m )$。

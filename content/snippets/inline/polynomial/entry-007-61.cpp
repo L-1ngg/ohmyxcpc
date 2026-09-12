@@ -1,3 +1,4 @@
+using i64 = long long;
 struct Polynomial {
     vector<Z> z;
     vector<int> r;
@@ -11,8 +12,8 @@ struct Polynomial {
         }
         ntt(z, n, 1);
     }
-    LL power(LL a, int b) {
-        LL res = 1;
+    i64 power(i64 a, int b) {
+        i64 res = 1;
         for (; b; b /= 2, a = a * a % mod) {
             if (b % 2) {
                 res = res * a % mod;

@@ -1,3 +1,4 @@
+using i64 = long long;
 struct HLD {
     std::vector<std::vector<int>> e;
     std::vector<int> siz, son;
@@ -25,13 +26,13 @@ struct HLD {
             if (siz[v] > siz[son[u]]) son[u] = v;
         }
     }
-    void add(int c) {
-    }
-    void del(int c) {
-    }
+    void add(int c) {}
+    void del(int c) {}
     void calc(int u, int fa, int f) {
-        if (f == 1) add(u);  // 原来写 add() 缺参数，按规定应为对节点 u 的颜色操作
-        else del(u);
+        if (f == 1)
+            add(u);
+        else
+            del(u);
         for (auto v : e[u]) {
             if (v == fa || v == hson) continue;
             calc(v, u, f);
@@ -49,7 +50,7 @@ struct HLD {
         calc(u, fa, 1);
         hson = 0;
         ans[u] = res;
-        if (!opt)   calc(u, fa, -1);
+        if (!opt) calc(u, fa, -1);
     }
     void work() {
         dfs1(1, 0);

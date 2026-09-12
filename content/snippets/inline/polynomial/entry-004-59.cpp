@@ -1,4 +1,4 @@
-template<int P = 998244353> Poly<P> berlekampMassey(const Poly<P> &s) {
+template <int P = 998244353> Poly<P> berlekampMassey(const Poly<P> &s) {
     Poly<P> c;
     Poly<P> oldC;
     int f = -1;

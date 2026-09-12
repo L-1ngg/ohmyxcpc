@@ -1,4 +1,4 @@
-template<typename T> tuple<int, Pt, Pt> segmentIntersection(Lt l1, Lt l2) {
+template <typename T> tuple<int, Pt, Pt> segmentIntersection(Lt l1, Lt l2) {
     auto [s1, e1] = l1;
     auto [s2, e2] = l2;
     auto A = max(s1.x, e1.x), AA = min(s1.x, e1.x);
@@ -30,7 +30,7 @@ template<typename T> tuple<int, Pt, Pt> segmentIntersection(Lt l1, Lt l2) {
     if (sign(cp1 * cp2) == 1 || sign(cp3 * cp4) == 1) {
         return {0, {}, {}};
     }
-    // 使用下方函数时请使用浮点数
+
     Pd p = lineIntersection(l1, l2);
     if (sign(cp1) != 0 && sign(cp2) != 0 && sign(cp3) != 0 && sign(cp4) != 0) {
         return {1, p, p};

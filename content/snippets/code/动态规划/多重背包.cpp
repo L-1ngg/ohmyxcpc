@@ -1,10 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long i64;
-typedef long long ll;
-typedef long long LL;
-typedef long double ld;
-typedef unsigned long long u64;
+
+using ld = long double;
+using u64 = unsigned long long;
 const int MOD = 998244353;
 const int mod = 1000000007;
 const int N = 1000005;
@@ -23,7 +21,7 @@ int w[M];
 int main() {
     for (int i = 1; i <= n; i++)
         for (int j = W; j >= 0; j--)
-            for (int k = 0; k <= s[i]; k++){
+            for (int k = 0; k <= s[i]; k++) {
                 if (j - k * w[i] < 0) break;
                 dp[j] = max(dp[j], dp[j - k * w[i]] + k * v[i]);
             }

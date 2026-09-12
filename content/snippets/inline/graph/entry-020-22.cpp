@@ -1,4 +1,5 @@
-LL Min = 1e18, ans = 0;
+using i64 = long long;
+i64 Min = 1e18, ans = 0;
 for (int k = 1; k <= n; k++) {
     for (int i = 1; i <= n; i++) {
         for (int j = 1; j <= n; j++) {
