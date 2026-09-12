@@ -138,3 +138,45 @@ syncBuiltinESMExports();
   assert.equal(readFileSync(join(published, 'manifest.json'), 'utf8'), 'previous manifest')
   assert.equal(readFileSync(join(published, 'all.pdf'), 'utf8'), 'previous PDF')
 })
+
+test('PDF links use real headings and retain cross-chapter web destinations', { timeout: 120_000 }, t => {
+  const dir = fixture(t)
+  writeFileSync(join(dir, 'content/sample/entry.md'), `# Links {#links}
+
+[Real target](/other/entry#other)
+
+[Code example](/other/entry#example)
+
+::: tip
+![diagram](/logo.png)
+:::
+`)
+  writeFileSync(join(dir, 'content/other/entry.md'), `# Other {#other}
+
+RealDestination
+
+\`\`\`text
+# Only code {#example}
+\`\`\`
+`)
+  const inspect = name => JSON.parse(execFileSync('uv', ['run', '--with', 'pymupdf==1.26.7', 'python', '-c', `import pymupdf,json,sys
+doc=pymupdf.open(sys.argv[1])
+print(json.dumps({'toc': doc.get_toc(), 'images': sum(len(page.get_images()) for page in doc), 'text': ''.join(page.get_text() for page in doc), 'links': [{'kind': link['kind'], 'uri': link.get('uri'), 'targetText': doc[link['page']].get_text() if link['kind']==1 and link.get('page', -1)>=0 else None} for page in doc for link in page.get_links()]}))`, join(dir, 'pdf', name + '.pdf')], { encoding: 'utf8' }))
+  let result = exportChapter(dir)
+  assert.equal(result.status, 0, result.stderr)
+  const chapter = inspect('sample')
+  assert.deepEqual(chapter.toc.map(([level, title]) => [level, title]), [[1, 'sample'], [2, 'Links']])
+  assert.ok(chapter.images > 0, 'An image inside a supported container reaches the PDF')
+  let links = chapter.links
+  assert.ok(links.some(link => link.uri === 'https://l-1ngg.github.io/ohmyxcpc/other/entry#other'))
+  result = spawnSync(process.execPath, [join(dir, 'scripts/export-pdf.mjs')], { cwd: dir, encoding: 'utf8', maxBuffer: 2e6 })
+  assert.equal(result.status, 0, result.stderr)
+  const book = inspect('all')
+  assert.deepEqual(book.toc.map(([level, title]) => [level, title]), [[1, 'preface'], [1, 'other'], [2, 'Other'], [1, 'sample'], [2, 'Links']])
+  assert.match(book.text, /# Only code \{#example\}/)
+  assert.ok(book.images > 0)
+  links = book.links
+  assert.ok(links.some(link => link.kind === 1 && link.targetText.includes('RealDestination')))
+  assert.ok(!links.some(link => link.uri?.endsWith('/other/entry#other')))
+  assert.ok(links.some(link => link.uri === 'https://l-1ngg.github.io/ohmyxcpc/other/entry#example'))
+})

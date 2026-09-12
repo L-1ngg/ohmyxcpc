@@ -1,6 +1,9 @@
 // Markdown → Typst 转换器（覆盖 XCPC 模板库的内容子集）
 // 支持：标题、段落、粗斜体、行内/块级代码、行内/块级 LaTeX 公式（经 mitex）、
 //       列表、链接、图片、表格、引用、分割线
+import { readFileSync, existsSync } from 'node:fs'
+import { join, dirname, resolve, relative } from 'node:path'
+import { createHash } from 'node:crypto'
 import MarkdownIt from 'markdown-it'
 import math from 'markdown-it-mathjax3'
 import containerPlugin from 'markdown-it-container'
@@ -93,9 +96,24 @@ function renderInline(tokens, options) {
   return out
 }
 
-// ---- 主转换 ----
-export function mdToTypst(src, options = {}) {
+// Parse once: heading identity is shared by indexing and rendering.
+function parseDocument(src) {
   const tokens = md.parse(src, {})
+  for (let i = 0; i < tokens.length; i++) {
+    if (tokens[i].type !== 'heading_open') continue
+    const inline = tokens[i + 1]
+    const anchor = inline.content.match(/\s*\{#([\w-]+)\}\s*$/)?.[1]
+    if (!anchor) continue
+    const tail = inline.children.at(-1)
+    if (tail?.type !== 'text') throw new Error('Invalid heading anchor')
+    tail.content = tail.content.replace(/\s*\{#[\w-]+\}\s*$/, '')
+    tokens[i].meta = { anchor }
+  }
+  return tokens
+}
+
+// ---- 主转换 ----
+function renderDocument(tokens, options) {
   const out = []
   for (let i = 0; i < tokens.length; i++) {
     const t = tokens[i]
@@ -113,13 +131,7 @@ export function mdToTypst(src, options = {}) {
     switch (t.type) {
       case 'heading_open': {
         const inline = tokens[i + 1]
-        const anchor = inline.content.match(/\s*\{#([\w-]+)\}\s*$/)?.[1]
-        if (anchor) {
-          const tail = inline.children.at(-1)
-          if (tail?.type !== 'text') throw new Error('Invalid heading anchor')
-          tail.content = tail.content.replace(/\s*\{#[\w-]+\}\s*$/, '')
-        }
-        const label = options.headingLabel?.(anchor, inline.content)
+        const label = t.meta?.label
         out.push(`${'='.repeat(Math.min(6, +t.tag.slice(1) + (options.headingOffset ?? 0)))} ${renderInline(inline.children, options)}${label ? ` <${label}>` : ''}\n`)
         i += 2
         break
@@ -172,7 +184,48 @@ export function mdToTypst(src, options = {}) {
 }
 
 // ---- 站点 Markdown 预处理：frontmatter、代码片段导入、VitePress 容器 ----
-export function preprocessMd(src, contentDir) {
+function preprocessMd(src, contentDir) {
   src = src.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, '')
   return expandSnippets(src, contentDir)
+}
+
+const label = value => 'doc-' + createHash('sha256').update(value).digest('hex').slice(0, 16)
+
+// Shared document conversion for CLI and prebuild; compiler details stay in exporter.
+export function composeBody(groups, contentDir) {
+  const root = dirname(contentDir)
+  const entries = groups.flatMap(group => group.entries).map(entry => ({
+    ...entry,
+    tokens: parseDocument(preprocessMd(readFileSync(join(contentDir, entry.path), 'utf8'), contentDir)),
+    route: '/' + entry.path.replace(/\.md$/, '')
+  }))
+  const links = {}
+  for (const entry of entries) {
+    links[entry.route] = label(entry.route)
+    if (entry.route.endsWith('/index')) links[entry.route.slice(0, -5)] = label(entry.route)
+    for (const token of entry.tokens) {
+      if (token.type === 'heading_open' && token.meta?.anchor) {
+        token.meta.label = label(`${entry.route}#${token.meta.anchor}`)
+        links[`${entry.route}#${token.meta.anchor}`] = token.meta.label
+      }
+    }
+  }
+  return entries.map(entry => {
+    const images = {}
+    const walk = tokens => {
+      for (const token of tokens) {
+        if (token.type === 'image') {
+          const src = token.attrGet('src')
+          const path = src.startsWith('/') ? resolve(contentDir, 'public', '.' + src) : resolve(contentDir, dirname(entry.path), src)
+          if (!path.startsWith(resolve(contentDir) + '/') || !existsSync(path)) throw new Error(`Missing image in ${entry.path}: ${src}`)
+          images[src] = '/' + relative(root, path)
+        }
+        if (token.children) walk(token.children)
+      }
+    }
+    walk(entry.tokens)
+    return `#metadata(none) <${label(entry.route)}>\n` + renderDocument(entry.tokens, {
+      images, links, headingOffset: entry.demote ? 1 : 0
+    })
+  }).join('\n')
 }

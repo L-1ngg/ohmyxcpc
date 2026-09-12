@@ -2,7 +2,8 @@ import { rmSync, mkdirSync, writeFileSync, renameSync, existsSync } from 'node:f
 import { join, resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { scanContent, chapterGroup, bookGroups } from './lib/content.mjs'
-import { composeBody, exportOne } from './pdf/exporter.mjs'
+import { exportOne } from './pdf/exporter.mjs'
+import { composeBody } from './pdf/md2typst.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const contentDir = join(root, 'content')

@@ -2,7 +2,8 @@
 import { resolve, dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { scanContent, chapterGroup, bookGroups } from './lib/content.mjs'
-import { composeBody, exportOne } from './pdf/exporter.mjs'
+import { exportOne } from './pdf/exporter.mjs'
+import { composeBody } from './pdf/md2typst.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const [target, ...extra] = process.argv.slice(2)
