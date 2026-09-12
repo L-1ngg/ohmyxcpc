@@ -104,6 +104,34 @@ try {
   check('移动端无页面横向溢出', await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
   if (process.env.HEADED === '1') await page.waitForTimeout(2000)
   await page.screenshot({ path: join(root, 'pdf/verification/export-mobile.png') })
+  for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844 }]) {
+    await page.setViewportSize(viewport)
+    for (const [path, container, link] of [
+      ['/export?target=string', '.ep', '.ep-dl'],
+      [`/${chapter.dir}/${entry.slug}`, '.chapter-pdf', '.cp-actions a'],
+    ]) {
+      // The mobile layout hides the chapter aside; its desktop behavior is checked above.
+      if (viewport.width < 768 && container === '.chapter-pdf') continue
+      for (const failure of ['network', 'legacy']) {
+        let recover = false
+        await page.route('**/pdfs/manifest.json', route => {
+          if (recover) return route.continue()
+          if (failure === 'network') return route.abort('failed')
+          return route.fulfill({ json: { generatedAt: manifest.generatedAt, targets: [{ id: 'all', type: 'site', pdfs: {} }] } })
+        })
+        await page.goto(site + path, { waitUntil: 'networkidle' })
+        const panel = page.locator(container)
+        const retry = panel.getByRole('button', { name: '重试', exact: true })
+        await retry.waitFor({ state: 'visible' })
+        check(`${viewport.width} ${container} ${failure} 无损坏下载入口`, await panel.locator(link).count() === 0)
+        recover = true
+        await retry.click()
+        await panel.locator(link).waitFor({ state: 'visible' })
+        check(`${viewport.width} ${container} ${failure} 重试恢复章节链接`, (await panel.locator(link).getAttribute('href')) === `${base}pdfs/string.pdf`)
+        await page.unroute('**/pdfs/manifest.json')
+      }
+    }
+  }
   check('无页面运行异常', runtimeErrors.length === 0)
 } catch (error) {
   failures.push(error.stack ?? String(error))

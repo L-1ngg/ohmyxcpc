@@ -7,7 +7,13 @@ import { loadManifest, pdfUrl, fmtBytes, type PdfManifest } from './manifest'
 const route = useRoute()
 const { site } = useData()
 const manifest = ref<PdfManifest | null>(null)
-onMounted(async () => { manifest.value = await loadManifest() })
+const loading = ref(true)
+async function reload() {
+  loading.value = true
+  manifest.value = await loadManifest()
+  loading.value = false
+}
+onMounted(reload)
 
 const chapter = computed(() => {
   // route.path 带部署 base（如 /ohmyxcpc/graph/dinic.html），需先剥离
@@ -19,7 +25,14 @@ const chapter = computed(() => {
 </script>
 
 <template>
-  <div v-if="chapter" class="chapter-pdf">
+  <div v-if="loading || !manifest" class="chapter-pdf" role="status">
+    <span v-if="loading">PDF 加载中…</span>
+    <template v-else>
+      PDF 暂时不可用。
+      <button class="cp-retry" @click="reload">重试</button>
+    </template>
+  </div>
+  <div v-else-if="chapter" class="chapter-pdf">
     <div class="cp-title">本章 PDF · {{ chapter.title }}</div>
     <div class="cp-actions">
       <a :href="pdfUrl(chapter)" download>
@@ -39,6 +52,7 @@ const chapter = computed(() => {
   background: var(--vp-c-bg-soft);
   font-size: 13px;
 }
+.cp-retry { color: var(--vp-c-brand-1); text-decoration: underline; cursor: pointer; }
 .cp-title {
   font-weight: 600;
   margin-bottom: 8px;

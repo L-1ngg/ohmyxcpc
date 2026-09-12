@@ -15,13 +15,15 @@ const select = (id: string) => {
   history.replaceState(null, '', `?target=${encodeURIComponent(id)}`)
 }
 
-onMounted(async () => {
+async function reload() {
+  failed.value = false
   const q = new URLSearchParams(location.search)
   manifest.value = await loadManifest()
   if (!manifest.value) { failed.value = true; return }
   const t = q.get('target')
   if (t && manifest.value.targets.some(x => x.id === t)) targetId.value = t
-})
+}
+onMounted(reload)
 
 const current = computed(() => manifest.value?.targets.find(t => t.id === targetId.value))
 const site = computed(() => manifest.value?.targets.find(t => t.type === 'site'))
@@ -34,6 +36,7 @@ const toggleLabel = computed(() =>
   <div class="ep">
     <div v-if="failed" class="ep-warn">
       PDF 暂时不可用。
+      <button class="ep-retry" @click="reload">重试</button>
     </div>
     <div v-else-if="!manifest" class="ep-warn">加载中…</div>
 
@@ -128,6 +131,7 @@ const toggleLabel = computed(() =>
   border-radius: 8px;
   background: #fff;
 }
+.ep-retry { color: var(--vp-c-brand-1); text-decoration: underline; cursor: pointer; }
 .ep-warn { color: var(--vp-c-text-2); line-height: 1.8; }
 .ep-catalog-toggle { display: none; }
 
