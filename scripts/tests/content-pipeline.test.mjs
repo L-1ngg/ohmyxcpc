@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { mkdtempSync, mkdirSync, cpSync, writeFileSync, readFileSync, symlinkSync, rmSync } from 'node:fs'
+import { mkdtempSync, mkdirSync, cpSync, writeFileSync, readFileSync, statSync, symlinkSync, rmSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { execFileSync, spawnSync } from 'node:child_process'
 import { launchBrowser } from '../lib/browser.mjs'
@@ -96,11 +96,14 @@ test('failed full export preserves the last complete published manifest', t => {
   const path = join(dir, 'content/public/pdfs/manifest.json')
   const previous = '{"generatedAt":"previous","targets":[]}'
   writeFileSync(path, previous)
+  writeFileSync(join(dir, 'content/public/pdfs/all.pdf'), 'previous PDF')
   const result = spawnSync(process.execPath, [join(dir, 'scripts/prebuild-pdfs.mjs')], {
     cwd: dir, encoding: 'utf8', env: { ...process.env, TYPST_PATH: '/not-a-compiler' }
   })
   assert.notEqual(result.status, 0)
   assert.equal(readFileSync(path, 'utf8'), previous)
+  assert.equal(readFileSync(join(dir, 'content/public/pdfs/all.pdf'), 'utf8'), 'previous PDF')
+  assert.match(result.stderr, /PREPARATION_FAILED: published=previous/)
 })
 
 test('missing Chromium installation reports an actionable message', t => {
@@ -113,30 +116,23 @@ test('missing Chromium installation reports an actionable message', t => {
   assert.doesNotMatch(result.stderr, /ENOENT/)
 })
 
-test('publication rename failure restores the previous PDF set', { timeout: 120_000 }, t => {
+test('full prebuild publishes every compiled target with matching file sizes', { timeout: 120_000 }, t => {
   const dir = fixture(t)
   const published = join(dir, 'content/public/pdfs')
   mkdirSync(published)
   writeFileSync(join(published, 'manifest.json'), 'previous manifest')
   writeFileSync(join(published, 'all.pdf'), 'previous PDF')
-  const preload = join(dir, 'fail-publication.cjs')
-  writeFileSync(preload, `
-const fs = require('node:fs');
-const { syncBuiltinESMExports } = require('node:module');
-const rename = fs.renameSync;
-fs.renameSync = function(source, destination) {
-  if (source.endsWith('/prebuild/pdfs')) throw new Error('injected publication failure');
-  return rename(source, destination);
-};
-syncBuiltinESMExports();
-`)
-  const result = spawnSync(process.execPath, ['--require', preload, join(dir, 'scripts/prebuild-pdfs.mjs')], {
+  const result = spawnSync(process.execPath, [join(dir, 'scripts/prebuild-pdfs.mjs')], {
     cwd: dir, encoding: 'utf8', maxBuffer: 2e6
   })
-  assert.notEqual(result.status, 0)
-  assert.match(result.stderr, /injected publication failure/)
-  assert.equal(readFileSync(join(published, 'manifest.json'), 'utf8'), 'previous manifest')
-  assert.equal(readFileSync(join(published, 'all.pdf'), 'utf8'), 'previous PDF')
+  assert.equal(result.status, 0, result.stderr)
+  const manifest = JSON.parse(readFileSync(join(published, 'manifest.json'), 'utf8'))
+  assert.deepEqual(manifest.targets.map(target => target.id), ['all', 'other', 'sample'])
+  for (const target of manifest.targets) {
+    const pdf = join(dir, 'content/public', target.pdf.url)
+    assert.equal(statSync(pdf).size, target.pdf.bytes)
+    assert.equal(readFileSync(pdf).subarray(0, 5).toString(), '%PDF-')
+  }
 })
 
 test('PDF links use real headings and retain cross-chapter web destinations', { timeout: 120_000 }, t => {
