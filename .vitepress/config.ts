@@ -19,7 +19,7 @@ const sidebar = chapters.map(c => ({
 
 export default defineConfig({
   title: 'OhMyXCPC',
-  description: 'XCPC 算法模板库',
+  description: '面向 ICPC / CCPC 的现代 C++ 算法模板库：简明说明、清晰代码，支持在线搜索与整本 / 分章 PDF 下载。',
   srcDir: './content',
   // 部署到子路径（如 GitHub Pages 项目页）时由 CI 注入 VITEPRESS_BASE
   base: process.env.VITEPRESS_BASE || '/',

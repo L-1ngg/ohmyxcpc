@@ -1,7 +1,7 @@
 {
   "name": "ohmyxcpc",
   "version": "1.0.0",
-  "description": "XCPC 算法模板库 —— 丢进文件夹，自动成站",
+  "description": "面向 ICPC / CCPC 的现代 C++ 算法模板库：简明说明、清晰代码，支持在线搜索与整本 / 分章 PDF 下载。",
   "homepage": "https://l-1ngg.github.io/ohmyxcpc/",
   "repository": {
     "type": "git",
