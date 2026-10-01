@@ -15,6 +15,15 @@ permissions:
   id-token: write
 
 jobs:
+  check-code:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node scripts/check-code.mjs
+
   build:
     runs-on: ubuntu-latest
     env:
@@ -61,7 +70,14 @@ jobs:
       - name: Install Chromium
         run: pnpm exec playwright-core install chromium-headless-shell
       - run: pnpm test
-      - run: pnpm check:code
+
+      - name: Restore PDF cache
+        uses: actions/cache@v4
+        with:
+          path: .cache/pdf
+          key: pdf-${{ runner.os }}-${{ runner.arch }}-typst-0.14.2-${{ github.sha }}
+          restore-keys: |
+            pdf-${{ runner.os }}-${{ runner.arch }}-typst-0.14.2-
 
       # 先预生成 PDF 到 content/public/pdfs/，再构建站点（public 随构建复制进 dist）
       - run: pnpm prebuild:pdf
@@ -79,7 +95,7 @@ jobs:
           path: .vitepress/dist
 
   deploy:
-    needs: build
+    needs: [build, check-code]
     runs-on: ubuntu-latest
     environment:
       name: github-pages

@@ -4,5 +4,6 @@ node_modules/
 /pdf/
 /scripts/pdf/.build/
 /content/public/pdfs/
+/content/public/images/*.webp
 /content/public/.pdfs-backup/
 /.cache/

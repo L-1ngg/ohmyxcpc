@@ -184,21 +184,24 @@ function renderDocument(tokens, options) {
 }
 
 // ---- 站点 Markdown 预处理：frontmatter、代码片段导入、VitePress 容器 ----
-function preprocessMd(src, contentDir) {
+function preprocessMd(src, contentDir, onDependency) {
   src = src.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, '')
-  return expandSnippets(src, contentDir)
+  return expandSnippets(src, contentDir, onDependency)
 }
 
 const label = value => 'doc-' + createHash('sha256').update(value).digest('hex').slice(0, 16)
 
 // Shared document conversion for CLI and prebuild; compiler details stay in exporter.
-export function composeBody(groups, contentDir) {
+export function composeBody(groups, contentDir, onDependency = () => {}) {
   const root = dirname(contentDir)
-  const entries = groups.flatMap(group => group.entries).map(entry => ({
-    ...entry,
-    tokens: parseDocument(preprocessMd(readFileSync(join(contentDir, entry.path), 'utf8'), contentDir)),
-    route: '/' + entry.path.replace(/\.md$/, '')
-  }))
+  const entries = groups.flatMap(group => group.entries).map(entry => {
+    onDependency(join(contentDir, entry.path))
+    return {
+      ...entry,
+      tokens: parseDocument(preprocessMd(readFileSync(join(contentDir, entry.path), 'utf8'), contentDir, onDependency)),
+      route: '/' + entry.path.replace(/\.md$/, '')
+    }
+  })
   const links = {}
   for (const entry of entries) {
     links[entry.route] = label(entry.route)
@@ -218,6 +221,7 @@ export function composeBody(groups, contentDir) {
           const src = token.attrGet('src')
           const path = src.startsWith('/') ? resolve(contentDir, 'public', '.' + src) : resolve(contentDir, dirname(entry.path), src)
           if (!path.startsWith(resolve(contentDir) + '/') || !existsSync(path)) throw new Error(`Missing image in ${entry.path}: ${src}`)
+          onDependency(path)
           images[src] = '/' + relative(root, path)
         }
         if (token.children) walk(token.children)

@@ -15,7 +15,7 @@ export function codeRegion(source, path) {
   return body.map(line => line.slice(Math.min(indent, line.length))).join('\n').trimEnd()
 }
 
-export function expandSnippets(source, contentDir) {
+export function expandSnippets(source, contentDir, onDependency = () => {}) {
   // A fenced example containing an include directive is documentation, not an import.
   const lines = source.split('\n')
   let fence = null
@@ -31,6 +31,7 @@ export function expandSnippets(source, contentDir) {
     if (!include) return line
     const path = resolve(contentDir, include[1])
     if (!path.startsWith(resolve(contentDir, 'snippets') + sep)) throw new Error(`Invalid snippet path: ${include[1]}`)
+    onDependency(path)
     const code = codeRegion(readFileSync(path, 'utf8'), include[1])
     let delimiter = '```'
     while (code.includes(delimiter)) delimiter += '`'

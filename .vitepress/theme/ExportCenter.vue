@@ -6,11 +6,13 @@ import { loadManifest, pdfUrl, fmtBytes, type PdfManifest } from './manifest'
 const manifest = ref<PdfManifest | null>(null)
 const failed = ref(false)
 const targetId = ref('all')
+const preview = ref(false)
 const catalogOpen = ref(false) // 移动端目录展开状态（默认折叠，避免长列表遮挡预览）
 
 // 选择目标（移动端选择后自动收起目录）
 const select = (id: string) => {
   targetId.value = id
+  preview.value = false
   catalogOpen.value = false
   history.replaceState(null, '', `?target=${encodeURIComponent(id)}`)
 }
@@ -22,6 +24,7 @@ async function reload() {
   if (!manifest.value) { failed.value = true; return }
   const t = q.get('target')
   if (t && manifest.value.targets.some(x => x.id === t)) targetId.value = t
+  preview.value = q.get('preview') === '1' && !!t && manifest.value.targets.some(x => x.id === t && x.type === 'chapter')
 }
 onMounted(reload)
 
@@ -61,9 +64,10 @@ const toggleLabel = computed(() =>
           <span v-if="current" class="ep-meta">
             {{ current.title }} · {{ fmtBytes(current.pdf.bytes) }}
           </span>
+          <button v-if="current && !preview" class="ep-preview" @click="preview = true">预览 PDF</button>
           <a v-if="current" class="ep-dl" :href="pdfUrl(current)" download>下载 PDF</a>
         </div>
-        <iframe v-if="current" class="ep-frame" :src="pdfUrl(current)" title="PDF 预览"></iframe>
+        <iframe v-if="current && preview" :key="current.id" class="ep-frame" :src="pdfUrl(current)" title="PDF 预览"></iframe>
       </main>
     </div>
   </div>
@@ -122,6 +126,14 @@ const toggleLabel = computed(() =>
   color: #fff !important;
   text-decoration: none;
   font-size: 14px;
+}
+.ep-preview {
+  padding: 6px 18px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  color: var(--vp-c-brand-1);
+  font-size: 14px;
+  cursor: pointer;
 }
 .ep-frame {
   width: 100%;

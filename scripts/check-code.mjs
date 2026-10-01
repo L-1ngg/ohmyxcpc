@@ -1,20 +1,15 @@
 import { readFileSync } from 'node:fs'
-import { execFile } from 'node:child_process'
-import { promisify } from 'node:util'
-import { resolve } from 'node:path'
-const run = promisify(execFile)
+import { fileURLToPath } from 'node:url'
+import { checkCodeFiles, checkCodeOptions } from './lib/check-code.mjs'
 const manifest = JSON.parse(readFileSync(new URL('../docs/migration/source-manifest.json', import.meta.url), 'utf8'))
-const root = new URL('..', import.meta.url).pathname
+const root = fileURLToPath(new URL('..', import.meta.url))
 const files = manifest.code.filter(code => code.kind === 'independent')
-const failures = []
-for (const [index, file] of files.entries()) {
-  try {
-    await run('g++', ['-std=gnu++20', '-fsyntax-only', resolve(root, 'content', file.target)], { maxBuffer: 1024 * 1024 })
-  } catch (error) {
-    failures.push(file.target)
-    console.error(`${file.target}\n${error.stderr ?? error.message}`)
-  }
-  if ((index + 1) % 20 === 0) console.log(`Checked ${index + 1}/${files.length}`)
+try {
+  const failures = await checkCodeFiles({ root, files, ...checkCodeOptions(process.argv.slice(2)) })
+  for (const diagnostic of failures) console.error(diagnostic)
+  console.log(`C++ syntax checks: ${files.length - failures.length}/${files.length}; inline snippets require their documented context.`)
+  if (failures.length) process.exitCode = 1
+} catch (error) {
+  console.error(error.message)
+  process.exitCode = 1
 }
-console.log(`C++ syntax checks: ${files.length - failures.length}/${files.length}; inline snippets require their documented context.`)
-if (failures.length) process.exitCode = 1

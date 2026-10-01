@@ -1,0 +1,70 @@
+import { test } from 'node:test'
+import assert from 'node:assert/strict'
+import { mkdtempSync, mkdirSync, cpSync, symlinkSync, writeFileSync, readFileSync, readdirSync, statSync, rmSync } from 'node:fs'
+import { join, resolve } from 'node:path'
+import { spawnSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
+
+const root = resolve(import.meta.dirname, '../..')
+const sha = path => createHash('sha256').update(readFileSync(path)).digest('hex')
+
+test('incremental PDF CLI validates reuse, dependency changes, corruption, and failed publication', { timeout: 180_000 }, t => {
+  mkdirSync(join(root, '.cache'), { recursive: true })
+  const dir = mkdtempSync(join(root, '.cache/pdf-test-'))
+  t.after(() => rmSync(dir, { recursive: true, force: true }))
+  cpSync(join(root, 'scripts'), join(dir, 'scripts'), { recursive: true, filter: path => !path.includes('/.build') && !path.includes('/tests') })
+  symlinkSync(join(root, 'node_modules'), join(dir, 'node_modules'), 'dir')
+  mkdirSync(join(dir, '.cache'))
+  symlinkSync(join(root, '.cache/fonts'), join(dir, '.cache/fonts'), 'dir')
+  for (const path of ['content/first', 'content/second', 'content/snippets', 'content/public/images', '.vitepress/theme']) mkdirSync(join(dir, path), { recursive: true })
+  for (const chapter of ['first', 'second']) writeFileSync(join(dir, `content/${chapter}/index.md`), `# ${chapter}\n`)
+  writeFileSync(join(dir, 'content/preface.md'), '# Preface\n')
+  writeFileSync(join(dir, 'content/snippets/example.cpp'), 'int value = 1;\n')
+  writeFileSync(join(dir, 'content/first/entry.md'), '# First\n\n![image](/images/example.png)\n\n<<< @/snippets/example.cpp\n')
+  cpSync(join(root, 'content/public/images/img-01.png'), join(dir, 'content/public/images/example.png'))
+  const published = join(dir, 'content/public/pdfs'), cache = join(dir, '.cache/pdf')
+  const run = (compiled, reused, env = {}) => {
+    const result = spawnSync(process.execPath, [join(dir, 'scripts/prebuild-pdfs.mjs')], { cwd: dir, encoding: 'utf8', env: { ...process.env, ...env }, maxBuffer: 2e6 })
+    assert.equal(result.status, 0, result.stderr)
+    assert.match(result.stdout, new RegExp(`PDF compilation: ${compiled}; reused: ${reused}; total: 3`))
+    const manifest = JSON.parse(readFileSync(join(published, 'manifest.json'), 'utf8'))
+    assert.deepEqual(readdirSync(published).sort(), ['all.pdf', 'first.pdf', 'manifest.json', 'second.pdf'])
+    for (const target of manifest.targets) {
+      const file = join(published, `${target.id}.pdf`)
+      assert.equal(statSync(file).size, target.pdf.bytes)
+      assert.equal(readFileSync(file).subarray(0, 5).toString(), '%PDF-')
+    }
+    return Object.fromEntries(manifest.targets.map(target => [target.id, sha(join(published, `${target.id}.pdf`))]))
+  }
+  const cold = run(3, 0)
+  assert.deepEqual(run(0, 3), cold, 'all cached PDFs are byte-for-byte identical')
+  writeFileSync(join(dir, '.vitepress/theme/style.css'), '.test { color: red }\n')
+  assert.deepEqual(run(0, 3), cold)
+  writeFileSync(join(dir, 'content/first/entry.md'), readFileSync(join(dir, 'content/first/entry.md'), 'utf8') + '\nChanged prose.\n')
+  const prose = run(2, 1)
+  assert.equal(prose.second, cold.second)
+  assert.notEqual(prose.first, cold.first)
+  writeFileSync(join(dir, 'content/snippets/example.cpp'), 'int value = 2;\n')
+  run(2, 1)
+  cpSync(join(root, 'content/public/images/img-02.png'), join(dir, 'content/public/images/example.png'))
+  run(2, 1)
+  writeFileSync(join(dir, 'scripts/pdf/template.typ'), readFileSync(join(dir, 'scripts/pdf/template.typ'), 'utf8') + '\n// shared input changed\n')
+  run(3, 0)
+  writeFileSync(join(cache, 'first.pdf'), '%PDF-corrupt')
+  run(1, 2)
+  rmSync(join(cache, 'second.pdf'))
+  run(1, 2)
+  writeFileSync(join(cache, 'index.json'), '{invalid')
+  run(3, 0)
+  writeFileSync(join(dir, 'content/preface.md'), '# Changed preface\n')
+  run(3, 0)
+  const before = Object.fromEntries(readdirSync(published).map(name => [name, sha(join(published, name))]))
+  const indexBefore = sha(join(cache, 'index.json'))
+  writeFileSync(join(dir, 'content/first/entry.md'), '# Fail\n\n$\\unsupportedcommand$\n')
+  const failed = spawnSync(process.execPath, [join(dir, 'scripts/prebuild-pdfs.mjs')], { cwd: dir, encoding: 'utf8', maxBuffer: 2e6 })
+  assert.notEqual(failed.status, 0)
+  assert.match(failed.stderr, /PREPARATION_FAILED: published=previous/)
+  assert.deepEqual(Object.fromEntries(readdirSync(published).map(name => [name, sha(join(published, name))])), before)
+  assert.equal(sha(join(cache, 'index.json')), indexBefore)
+  assert.ok(!readdirSync(join(dir, 'content/public')).some(name => name.startsWith('.pdfs-')))
+})

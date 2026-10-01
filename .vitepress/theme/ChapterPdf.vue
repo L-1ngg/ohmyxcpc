@@ -39,7 +39,7 @@ const chapter = computed(() => {
         下载本章 <span class="cp-size">{{ fmtBytes(chapter.pdf.bytes) }}</span>
       </a>
     </div>
-    <a class="cp-more" :href="`${withBase('/export')}?target=${chapter.id}`">预览本章 →</a>
+    <a class="cp-more" :href="`${withBase('/export')}?target=${chapter.id}&preview=1`">预览本章 →</a>
   </div>
 </template>
 

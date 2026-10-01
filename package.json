@@ -32,6 +32,7 @@
     "markdown-it-container": "^4.0.0",
     "markdown-it-mathjax3": "^4.3.2",
     "playwright-core": "^1.62.1",
+    "sharp": "^0.35.5",
     "typescript": "~5.9.3",
     "vitepress": "^1.6.4",
     "vue": "^3.5.41",

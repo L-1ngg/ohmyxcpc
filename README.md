@@ -65,6 +65,7 @@ scripts/                构建、导出与验证脚本
 - [写作指南](docs/CONTRIBUTING.md)：条目结构、内容要求、代码引用与收录流程。
 - [代码维护规则](.agents/skills/xcpc-template-ingest/references/code-style.md)：竞赛码风、注释外移与类型约定。
 - [自定义指南](docs/CUSTOMIZING.md)：站点外观、PDF 排版和部署配置。
+- [性能优化与复测](docs/performance-optimization.md)：PDF 增量缓存、搜索预热、无损图片、C++ 并发/PCH 开关与验证记录。
 
 按改动范围运行检查：
 
